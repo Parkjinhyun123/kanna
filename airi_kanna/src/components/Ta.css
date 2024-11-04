@@ -1,0 +1,75 @@
+/* Ta.css */
+
+.app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  user-select: none;
+}
+
+.move-up {
+  animation: reduceHeight 0.5s forwards;
+  opacity: 1;
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 1000ms, transform 1000ms;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 500ms, transform 1000ms;
+}
+
+.animation-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 1;
+}
+
+.animated-image {
+  position: relative;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 1s ease, opacity 1s ease; /* 애니메이션 효과 추가 */
+}
+
+.animated-image.clicked {
+  transform: scale(1.5); /* 클릭 시 커지는 크기 */
+  opacity: 0; /* 클릭 시 흐려짐 */
+}
+
+.text {
+  opacity: 0;
+  transition: opacity 500ms ease-in;
+}
+
+.text.show {
+  opacity: 1; /* show 클래스가 추가되면 불투명도가 1로 변경됩니다. */
+}
+
+/* @keyframes reduceHeight {
+  0% {
+    height: 100vh;
+  }
+  100% {
+    height: 5vh;
+  }
+} */
