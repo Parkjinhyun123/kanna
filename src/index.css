@@ -1,8 +1,31 @@
+@font-face {
+  font-family: "LibreBaskerville-Bold";
+  font-weight: bold;
+  src: url("./assets/LibreBaskerville-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "LibreBaskerville-Italic";
+  font-weight: bold;
+  src: url("./assets/LibreBaskerville-Italic.ttf") format("truetype");
+}
+@font-face {
+  font-family: "LibreBaskerville-Regular";
+  font-weight: normal;
+  src: url("./assets/LibreBaskerville-Regular.ttf") format("truetype");
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&display=swap");
+
 html,
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "LibreBaskerville-Bold", "LibreBaskerville-Italic",
+    "LibreBaskerville-Regular", "Noto Sans KR", sans-serif;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 html,
