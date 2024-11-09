@@ -46,7 +46,7 @@ function App() {
   const secondTexts = [
     "어땠어? \n 칸나의 이야기를 담은 \n 다이어리야 \n\n 더 많은 이야기가 있었지만 \n 적기엔 페이지가 부족했네..",
     "하지만 그만큼 \n 칸나가 많은 이야기를 \n 써왔다는 거니까 \n\n 좋은게 아닐까? ",
-    "벌써 시간이 이렇게 됐네 \n 우리는 어디서든 칸나를 응원하고 있을게! \n\n 다음에 다시 만나자 \n 우리의 마지막 오시!",
+    "벌써 시간이 이렇게 됐네 \n 우리는 어디서든 칸나를 응원하고 있을게! \n\n 다음에 다시 만나자 \n 생일 축하해! 우리의 마지막 오시!",
     "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게!",
   ];
 
@@ -54,7 +54,6 @@ function App() {
     setShowBackground((prev) => !prev);
     setShowOutlet(false);
     if (showBackground == true) {
-      console.log(showBackground);
       setTimeout(() => {
         setShowButton(true);
       }, 600);

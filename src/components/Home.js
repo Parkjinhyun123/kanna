@@ -51,7 +51,7 @@ const Home = () => {
           <YouTube
             videoId={videoId}
             opts={opts}
-            onEnd={handleVideoEnd} // 비디오가 종료되면 handleVideoEnd 호출
+            onEnd={handleVideoEnd}
             className="player"
           />
           {isVideoEnded && (
