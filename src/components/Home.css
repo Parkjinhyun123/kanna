@@ -1,6 +1,6 @@
 .Youtube-container {
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100vw;
@@ -26,4 +26,24 @@
 .video-ended-image img {
   max-width: 100%;
   height: auto;
+}
+
+.last {
+  width: 100vw;
+  /* height: 100vh; */
+  overflow: hidden;
+}
+
+.player.last-background {
+  top: 60%;
+}
+
+.last-background iframe {
+  position: absolute;
+  width: 600px;
+  height: 300px;
+  bottom: 1;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4000;
 }

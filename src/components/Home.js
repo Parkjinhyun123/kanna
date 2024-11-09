@@ -4,6 +4,7 @@ import "./Home.css";
 import YouTube from "react-youtube";
 import Uroko from "../assets/테스트비늘이.png";
 import { useOutletContext } from "react-router-dom";
+import Last from "../assets/bye.jpg";
 
 const Home = () => {
   const {
@@ -14,6 +15,7 @@ const Home = () => {
     setIsVideoEnded,
   } = useOutletContext();
 
+  const [lastBack, setLastBack] = useState(false);
   const [videoId, setVideoId] = useState(null);
 
   useEffect(() => {
@@ -41,18 +43,22 @@ const Home = () => {
     setIsVideoEnded(true);
     if (videoIdToFetch == "kIBXQHvgs1c") {
       setIsVideoEnded(false);
+      setLastBack(true);
     }
   };
 
+  const lastBackClass = lastBack ? "last-background" : "";
+
   return (
     <div className="Youtube-container">
+      {lastBack && <img src={Last} alt="마지막 배경" className="last" />}
       {videoId && (
         <>
           <YouTube
             videoId={videoId}
             opts={opts}
             onEnd={handleVideoEnd}
-            className="player"
+            className={`player ${lastBackClass}`}
           />
           {isVideoEnded && (
             <div className="video-ended-image" onClick={toggleBackground}>

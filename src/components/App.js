@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import Ta from "./Ta";
-import Nav from "./Nav";
 import styles from "./App.module.css";
 import Uroko from "../assets/테스트비늘이.png";
 import Uroko1 from "../assets/불시안1.gif";
@@ -46,27 +45,25 @@ function App() {
   const secondTexts = [
     "어땠어? \n 칸나의 이야기를 담은 \n 다이어리야 \n\n 더 많은 이야기가 있었지만 \n 적기엔 페이지가 부족했네..",
     "하지만 그만큼 \n 칸나가 많은 이야기를 \n 써왔다는 거니까 \n\n 좋은게 아닐까? ",
-    "벌써 시간이 이렇게 됐네 \n 우리는 어디서든 칸나를 응원하고 있을게! \n\n 다음에 다시 만나자 \n 생일 축하해! 우리의 마지막 오시!",
+    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원하고 있을게! ",
+    "다음에 다시 만나자 \n\n 생일 축하해! \n\n우리의 마지막 오시!",
     "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게!",
   ];
 
   const toggleBackground = () => {
-    setShowBackground((prev) => !prev);
     setShowOutlet(false);
-    if (showBackground == true) {
-      setTimeout(() => {
-        setShowButton(true);
-      }, 600);
-      setTimeout(() => {
-        setSecondTextIndex(0);
-        setShowText(true);
-        setTypedText("");
-        setNavFilled(false);
-        typeSecondText(secondTexts[0], () => {
-          setIsSecondTextComplete(true);
-        });
-      }, 500);
-    }
+    setTimeout(() => {
+      setShowButton(true);
+    }, 600);
+    setTimeout(() => {
+      setSecondTextIndex(0);
+      setShowText(true);
+      setTypedText("");
+      setNavFilled(false);
+      typeSecondText(secondTexts[0], () => {
+        setIsSecondTextComplete(true);
+      });
+    }, 500);
   };
 
   const playRandomAudio = () => {
@@ -128,7 +125,7 @@ function App() {
           }
         });
       } else {
-        setShowBackground(false);
+        // setShowBackground(false);
         setShowText(false);
         setShowButton(false);
         setShowSecondGif(true);
@@ -146,10 +143,14 @@ function App() {
       setCurrentTextIndex(2);
       typeText(texts[2], () => {
         setTimeout(() => {
-          setShowBackground(true);
+          // setShowBackground(true);
           setShowText(false);
           setShowButton(false);
-          setShowOutlet(true);
+          setShowGif(true);
+          setTimeout(() => {
+            setShowOutlet(true);
+            setShowGif(false);
+          }, 3000);
         }, 500);
         setTimeout(() => {
           setNavFilled(true);
@@ -227,7 +228,6 @@ function App() {
         </div>
       )}
       <div className={styles.allCt}>
-        <Nav filled={navFilled} showText={false} />
         {showOutlet && (
           <Outlet
             context={{

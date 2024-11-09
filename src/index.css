@@ -25,7 +25,7 @@ body {
   font-family: "LibreBaskerville-Bold", "LibreBaskerville-Italic",
     "LibreBaskerville-Regular", "Noto Sans KR", sans-serif;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 html,
