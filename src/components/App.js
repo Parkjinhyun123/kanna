@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import Ta from "./Ta";
 import styles from "./App.module.css";
-import Uroko from "../assets/테스트비늘이.png";
+import Uroko from "../assets/비늘이.png";
 import Uroko1 from "../assets/불시안1.gif";
 import Letter from "../assets/편지.png";
 
@@ -31,10 +31,8 @@ function App() {
   const [secondTextIndex, setSecondTextIndex] = useState(0);
   const [isSecondTextComplete, setIsSecondTextComplete] = useState(false);
 
-  const [apiKey, setApiKey] = useState(
-    "AIzaSyDL88g-mJDjegmPrGyjqCafSvaIn4iS1w4"
-  );
   const [videoIdToFetch, setVideoIdToFetch] = useState("MkrAZi7GMpI");
+  const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
   const texts = [
     "어서와! \n 우리의 첫번째 오시!",
@@ -46,7 +44,7 @@ function App() {
     "어땠어? \n 칸나의 이야기를 담은 \n 다이어리야 \n\n 더 많은 이야기가 있었지만 \n 적기엔 페이지가 부족했네..",
     "하지만 그만큼 \n 칸나가 많은 이야기를 \n 써왔다는 거니까 \n\n 좋은게 아닐까? ",
     "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원하고 있을게! ",
-    "다음에 다시 만나자 \n\n 생일 축하해! \n\n우리의 마지막 오시!",
+    "다음에 다시 만나자 \n\n 생일 축하해! \n\n 우리의 마지막 오시!",
     "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게!",
   ];
 
@@ -76,6 +74,7 @@ function App() {
     playRandomAudio();
     setShowGif(true);
     setShowTa(false);
+
     setTimeout(() => {
       setShowGif(false);
       setShowText(true);
@@ -91,12 +90,14 @@ function App() {
   const typeText = (text, callback) => {
     let index = 0;
     setTypedText("");
+    setIsTyping(true); // 타이핑 시작
     const typingInterval = setInterval(() => {
       if (index < text.length) {
         setTypedText((prev) => prev + text[index]);
         index++;
       } else {
         clearInterval(typingInterval);
+        setIsTyping(false); // 타이핑 완료
         if (callback) callback();
       }
     }, 100);
@@ -105,17 +106,22 @@ function App() {
   const typeSecondText = (text, callback) => {
     let index = 0;
     setTypedText("");
+    setIsTyping(true); // 타이핑 시작
     const typingInterval = setInterval(() => {
       if (index < text.length) {
         setTypedText((prev) => prev + text[index]);
         index++;
       } else {
         clearInterval(typingInterval);
+        setIsTyping(false); // 타이핑 완료
         if (callback) callback();
       }
     }, 100);
   };
+
   const handleImageClick = () => {
+    if (isTyping) return; // 타이핑 중일 경우 클릭 무시
+
     if (isSecondTextComplete) {
       if (secondTextIndex < secondTexts.length - 1) {
         setSecondTextIndex((prev) => prev + 1);
@@ -125,7 +131,6 @@ function App() {
           }
         });
       } else {
-        // setShowBackground(false);
         setShowText(false);
         setShowButton(false);
         setShowSecondGif(true);
@@ -143,7 +148,6 @@ function App() {
       setCurrentTextIndex(2);
       typeText(texts[2], () => {
         setTimeout(() => {
-          // setShowBackground(true);
           setShowText(false);
           setShowButton(false);
           setShowGif(true);
@@ -160,6 +164,7 @@ function App() {
   };
 
   const handleLetterClick = () => {
+    setShowLetter(false);
     setVideoIdToFetch("kIBXQHvgs1c");
     setShowOutlet(true);
     setIsVideoEnded(false);
@@ -232,7 +237,6 @@ function App() {
           <Outlet
             context={{
               toggleBackground,
-              apiKey,
               videoIdToFetch,
               isVideoEnded,
               setIsVideoEnded,

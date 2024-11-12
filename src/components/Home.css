@@ -15,12 +15,18 @@
   z-index: 1000;
 }
 
+.player iframe {
+  border-radius: 16px;
+}
+
 .video-ended-image {
   text-align: center;
   position: absolute;
-  bottom: 1;
-  right: 0;
+  width: 200px;
+  bottom: -300px;
+  right: 200px;
   margin-top: 20px;
+  z-index: 400;
 }
 
 .video-ended-image img {
@@ -30,20 +36,81 @@
 
 .last {
   width: 100vw;
-  /* height: 100vh; */
+  height: 100vh;
   overflow: hidden;
+  z-index: 400;
 }
 
 .player.last-background {
-  top: 60%;
+  top: 65%;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
 }
 
 .last-background iframe {
   position: absolute;
-  width: 600px;
-  height: 300px;
-  bottom: 1;
+  width: 10%;
+  height: 20%;
+  bottom: 35%;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 4000;
+  z-index: 10;
+  border-radius: 16px;
+}
+
+/* Home.css */
+.ms-container {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10rem;
+  z-index: 300;
+}
+
+.ms-container:hover {
+  z-index: 1;
+}
+
+.ms-item {
+  font-size: 24px;
+  font-weight: bold;
+  width: 500px;
+  color: #ffffff;
+  z-index: 300;
+  text-shadow: 3px 1px 2px #373584;
+  /* opacity: 1; */
+  animation: fade-in-out 8s ease-in-out;
+  transition: opacity 8s ease-in-out;
+}
+
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 2560px) {
+  .video-ended-image {
+    bottom: -300px;
+    right: 500px;
+  }
 }
