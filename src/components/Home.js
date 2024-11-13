@@ -15,6 +15,8 @@ const Home = () => {
   const [documents, setDocuments] = useState([]);
   const [displayedMs, setDisplayedMs] = useState([]); // 화면에 표시될 ms 필드값 상태
   const audioRef = useRef(new Audio("/Sound/푸보용F.mp3"));
+  const msContainerRef = useRef(null); // ms-container에 대한 ref 추가
+  const [msCon, setMsCon] = useState(false);
 
   useEffect(() => {
     audioRef.current.volume = 0.4;
@@ -35,6 +37,7 @@ const Home = () => {
   const handleVideoEnd = () => {
     setIsVideoEnded(true);
     if (videoIdToFetch === "kIBXQHvgs1c") {
+      setMsCon(true);
       setIsVideoEnded(false);
       setLastBack(true);
       setTimeout(() => {
@@ -105,12 +108,17 @@ const Home = () => {
     let isOverlapping;
     const itemWidth = 100; // ms-item의 너비
     const itemHeight = 30; // ms-item의 높이 (폰트 사이즈 고려)
-    const offset = 800; // 화면 가장자리 여백
+    const container = msContainerRef.current; // ms-container에 대한 ref 사용
+
+    if (!container) return { x: 0, y: 0 }; // 컨테이너가 없으면 기본 위치 반환
+
+    const containerRect = container.getBoundingClientRect(); // 컨테이너 크기 가져오기
+    const offset = 20; // 여백
 
     do {
-      const x = Math.random() * (window.innerWidth - itemWidth - offset);
-      const y = Math.random() * (window.innerHeight - itemHeight);
-      newPosition = { x, y };
+      const x = Math.random() * (containerRect.width - itemWidth - offset);
+      const y = Math.random() * (containerRect.height - itemHeight - offset);
+      newPosition = { x: x + containerRect.left, y: y + containerRect.top };
 
       isOverlapping = prevPositions.some(
         (pos) =>
@@ -119,7 +127,7 @@ const Home = () => {
       );
     } while (isOverlapping);
 
-    return newPosition;
+    return newPosition; // 새로운 위치 반환
   };
 
   const opts = {
@@ -149,21 +157,23 @@ const Home = () => {
           )}
         </>
       )}
-      <div className="ms-container">
-        {displayedMs.map((msObj) => (
-          <div
-            key={msObj.id} // 타임스탬프를 고유 키로 사용
-            className="ms-item"
-            style={{
-              position: "absolute",
-              left: `${msObj.position.x}px`,
-              top: `${msObj.position.y}px`,
-              animation: `fade-in-out 6s forwards`, // 각 아이템에 대해 독립적인 애니메이션 적용
-            }}
-            dangerouslySetInnerHTML={{ __html: msObj.value }} // HTML로 렌더링
-          />
-        ))}
-      </div>
+      {msCon && (
+        <div className="ms-container" ref={msContainerRef}>
+          {displayedMs.map((msObj) => (
+            <div
+              key={msObj.id} // 타임스탬프를 고유 키로 사용
+              className="ms-item"
+              style={{
+                position: "absolute",
+                left: `${msObj.position.x}px`,
+                top: `${msObj.position.y}px`,
+                animation: `fade-in-out 6s forwards`, // 각 아이템에 대해 독립적인 애니메이션 적용
+              }}
+              dangerouslySetInnerHTML={{ __html: msObj.value }} // HTML로 렌더링
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

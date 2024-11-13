@@ -41,6 +41,7 @@
 .video-ended-image img {
   max-width: 100%;
   height: auto;
+  z-index: 600;
 }
 
 .last {
@@ -73,8 +74,8 @@
   position: absolute;
   top: 2px;
   left: 50%;
-  width: 50%;
-  height: 50%;
+  width: 70vw;
+  height: 70vh;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -93,13 +94,13 @@
   font-size: 24px;
   color: #fff;
   font-weight: bold;
-  padding: 5px;
+  padding: 30px;
   text-shadow: 3px 1px 2px #373584;
   transition: opacity 6s linear;
   white-space: pre-wrap;
   z-index: 400;
   opacity: 1;
-  width: 600px;
+  width: 700px;
 }
 
 @keyframes fade-in-out {
