@@ -48,6 +48,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  animation: fadeIn 60s forwards; /* 60초 동안 opacity가 0에서 1로 변하는 애니메이션 */
 }
 
 .player.last-background {
@@ -72,17 +73,28 @@
 /* Home.css */
 .ms-container {
   position: absolute;
-  top: 2px;
+  top: 50%;
   left: 50%;
-  width: 70vw;
-  height: 70vh;
-  transform: translateX(-50%);
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10rem;
+  /* padding: 10rem; */
   z-index: 3000;
   user-select: none;
+  word-break: keep-all;
+}
+
+.center-point {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  padding: 24px;
 }
 
 .ms-container:hover {
@@ -100,7 +112,7 @@
   white-space: pre-wrap;
   z-index: 400;
   opacity: 1;
-  width: 700px;
+  width: 800px;
 }
 
 @keyframes fade-in-out {
@@ -166,5 +178,14 @@
 @media (max-width: 800px) {
   .ms-item {
     font-size: 16px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

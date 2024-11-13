@@ -13,10 +13,27 @@ const Home = () => {
   const [lastBack, setLastBack] = useState(false);
   const [videoId, setVideoId] = useState(null);
   const [documents, setDocuments] = useState([]);
-  const [displayedMs, setDisplayedMs] = useState([]); // 화면에 표시될 ms 필드값 상태
-  const audioRef = useRef(new Audio("/Sound/푸보용F.mp3"));
-  const msContainerRef = useRef(null); // ms-container에 대한 ref 추가
+  const [displayedMs, setDisplayedMs] = useState([]);
+  const audioRef = useRef(new Audio("/Sound/푸보용.mp3"));
+  const msContainerRef = useRef(null);
   const [msCon, setMsCon] = useState(false);
+  const [images, setImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const importAll = (r) => {
+      let images = [];
+      r.keys().forEach((item) => {
+        images.push(r(item));
+      });
+      return images;
+    };
+
+    const images = importAll(
+      require.context("../assets/back", false, /\.(jpg|jpeg|png|gif)$/)
+    );
+    setImages(images.sort()); // 날짜순 정렬 (파일명이 날짜 형식일 경우)
+  }, []);
 
   useEffect(() => {
     audioRef.current.volume = 0.4;
@@ -40,27 +57,36 @@ const Home = () => {
       setMsCon(true);
       setIsVideoEnded(false);
       setLastBack(true);
-      setTimeout(() => {
-        audioRef.current.play().catch((error) => {
-          console.error("Audio play failed:", error);
-        });
-      }, 1000);
+
+      // 오디오 재생
+      audioRef.current.play().catch((error) => {
+        console.error("Audio play failed:", error);
+      });
+
+      const usedIndices = new Set();
 
       const interval = setInterval(() => {
-        if (documents.length > 0 && displayedMs.length < 5) {
-          const randomIndex = Math.floor(Math.random() * documents.length);
+        if (documents.length > 0 && displayedMs.length < 12) {
+          let randomIndex;
+          do {
+            randomIndex = Math.floor(Math.random() * documents.length);
+          } while (
+            usedIndices.has(randomIndex) &&
+            usedIndices.size < documents.length
+          );
+
+          if (usedIndices.size >= documents.length) {
+            clearInterval(interval);
+            return;
+          }
+
           const newMs = documents[randomIndex].ms;
+          usedIndices.add(randomIndex);
 
-          console.log("원본 문자열:", newMs);
-
-          // 줄 바꿈 처리
           const transformedMs = newMs
             .replace(/\\n/g, "<br />")
             .replace(/\n/g, "<br />");
 
-          console.log("변환된 문자열:", transformedMs); // 변환된 문자열 확인
-
-          // 상태 업데이트
           setDisplayedMs((prev) => {
             const updatedMs = [
               ...prev,
@@ -68,27 +94,29 @@ const Home = () => {
                 value: transformedMs,
                 position: getRandomPosition(prev),
                 id: Date.now(),
-              }, // 타임스탬프를 ID로 사용
+              },
             ];
 
-            // 개별 메시지에 대한 타이머 설정
             setTimeout(() => {
               setDisplayedMs((current) =>
                 current.filter(
                   (item) => item.id !== updatedMs[updatedMs.length - 1].id
                 )
-              ); // 방금 추가한 메시지만 제거
-            }, 6000); // 6초 후 제거
+              );
+            }, 6000);
 
-            console.log("업데이트된 displayedMs:", updatedMs); // 업데이트 상태 확인
             return updatedMs;
           });
         } else {
           console.log(
             "documents 배열이 비어있거나 displayedMs가 가득 찼습니다."
-          ); // 디버깅 메시지
+          );
         }
-      }, 3000); // 3초마다 새로운 메시지 추가
+      }, 2000);
+
+      setTimeout(() => {
+        clearInterval(interval);
+      }, 60000); // 52초 후 중지
 
       return () => clearInterval(interval);
     }
@@ -103,31 +131,46 @@ const Home = () => {
     loadDocuments();
   }, []);
 
-  const getRandomPosition = (prevPositions) => {
+  const getRandomPosition = (prevPositions, text) => {
+    const container = msContainerRef.current;
+
+    if (!container) return { x: 0, y: 0 };
+
+    const offset = 50;
+    const minDistance = 50;
+
+    const measureText = (text) => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      context.font = "24px Arial";
+      return {
+        width: context.measureText(text).width,
+        height: 30,
+      };
+    };
+
+    const { width: itemWidth } = measureText(text);
+    const itemHeight = 30;
+
     let newPosition;
-    let isOverlapping;
-    const itemWidth = 100; // ms-item의 너비
-    const itemHeight = 30; // ms-item의 높이 (폰트 사이즈 고려)
-    const container = msContainerRef.current; // ms-container에 대한 ref 사용
-
-    if (!container) return { x: 0, y: 0 }; // 컨테이너가 없으면 기본 위치 반환
-
-    const containerRect = container.getBoundingClientRect(); // 컨테이너 크기 가져오기
-    const offset = 20; // 여백
+    let isValidPosition;
 
     do {
-      const x = Math.random() * (containerRect.width - itemWidth - offset);
-      const y = Math.random() * (containerRect.height - itemHeight - offset);
-      newPosition = { x: x + containerRect.left, y: y + containerRect.top };
+      const x =
+        Math.random() * (container.clientWidth - itemWidth - offset * 2);
+      const y =
+        Math.random() * (container.clientHeight - itemHeight - offset * 2);
 
-      isOverlapping = prevPositions.some(
-        (pos) =>
-          Math.abs(pos.position.x - newPosition.x) < itemWidth &&
-          Math.abs(pos.position.y - newPosition.y) < itemHeight
-      );
-    } while (isOverlapping);
+      newPosition = { x, y };
+      isValidPosition = prevPositions.every((pos) => {
+        const distanceX = Math.abs(pos.position.x - newPosition.x);
+        const distanceY = Math.abs(pos.position.y - newPosition.y);
+        const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
+        return distance >= minDistance;
+      });
+    } while (!isValidPosition);
 
-    return newPosition; // 새로운 위치 반환
+    return newPosition;
   };
 
   const opts = {
@@ -144,7 +187,7 @@ const Home = () => {
             videoId={videoId}
             opts={opts}
             onEnd={handleVideoEnd}
-            className={`player ${lastBack ? "last-background" : ""}`} // 수정된 부분
+            className={`player ${lastBack ? "last-background" : ""}`}
           />
           {isVideoEnded && (
             <div className="video-ended-image" onClick={toggleBackground}>
@@ -159,19 +202,23 @@ const Home = () => {
       )}
       {msCon && (
         <div className="ms-container" ref={msContainerRef}>
-          {displayedMs.map((msObj) => (
-            <div
-              key={msObj.id} // 타임스탬프를 고유 키로 사용
-              className="ms-item"
-              style={{
-                position: "absolute",
-                left: `${msObj.position.x}px`,
-                top: `${msObj.position.y}px`,
-                animation: `fade-in-out 6s forwards`, // 각 아이템에 대해 독립적인 애니메이션 적용
-              }}
-              dangerouslySetInnerHTML={{ __html: msObj.value }} // HTML로 렌더링
-            />
-          ))}
+          <div className="center-point">
+            {" "}
+            {/* 중심 div */}
+            {displayedMs.map((msObj) => (
+              <div
+                key={msObj.id}
+                className="ms-item"
+                style={{
+                  position: "absolute",
+                  left: `${msObj.position.x}px`,
+                  top: `${msObj.position.y}px`,
+                  animation: `fade-in-out 6s forwards`,
+                }}
+                dangerouslySetInnerHTML={{ __html: msObj.value }}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
