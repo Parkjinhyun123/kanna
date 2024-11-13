@@ -5,6 +5,7 @@
   transform: translate(-50%, -50%);
   width: 100vw;
   z-index: 30;
+  user-select: none;
 }
 
 .player {
@@ -22,6 +23,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
+  height: 590px;
+  width: 900px;
   transform: translate(-50%, -50%);
 }
 
@@ -44,7 +47,6 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  z-index: 400;
 }
 
 .player.last-background {
@@ -52,6 +54,7 @@
   width: 100%;
   height: 100%;
   z-index: 10;
+  object-fit: cover;
 }
 
 .last-background iframe {
@@ -77,7 +80,8 @@
   flex-direction: column;
   align-items: center;
   padding: 10rem;
-  z-index: 300;
+  z-index: 3000;
+  user-select: none;
 }
 
 .ms-container:hover {
@@ -85,32 +89,31 @@
 }
 
 .ms-item {
+  display: block;
   font-size: 24px;
+  color: #fff;
   font-weight: bold;
-  width: 500px;
-  color: #ffffff;
-  z-index: 300;
+  padding: 5px;
   text-shadow: 3px 1px 2px #373584;
-  /* opacity: 1; */
-  animation: fade-in-out 5s ease-in-out;
-  transition: opacity 5s ease-in-out;
+  transition: opacity 6s linear;
+  white-space: pre-wrap;
+  z-index: 400;
+  opacity: 1;
+  width: 600px;
 }
 
 @keyframes fade-in-out {
   0% {
     opacity: 0;
   }
-  25% {
-    opacity: 0.5;
+  20% {
+    opacity: 1; /* 20%에서 완전히 보이도록 설정 */
   }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.5;
+  80% {
+    opacity: 1; /* 80%까지 유지 */
   }
   100% {
-    opacity: 0;
+    opacity: 0; /* 마지막에 사라짐 */
   }
 }
 
@@ -118,6 +121,10 @@
   .video-ended-image {
     bottom: -300px;
     right: 500px;
+  }
+
+  .ms-item {
+    font-size: 32px;
   }
 }
 
@@ -148,5 +155,15 @@
     font-size: 16px;
     padding: 1rem;
     margin: 1rem;
+  }
+  iframe {
+    width: 400px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 800px) {
+  .ms-item {
+    font-size: 16px;
   }
 }

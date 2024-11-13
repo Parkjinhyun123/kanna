@@ -35,6 +35,15 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.letter {
+  z-index: 200;
+  width: 400px;
+  height: 250px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .text {
   position: fixed;
@@ -49,6 +58,7 @@
   opacity: 0;
   transition: opacity 500ms ease-in;
   white-space: pre-line;
+  user-select: none;
 }
 
 .text.show {
@@ -68,11 +78,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 200;
-}
-
-.firstGif {
-  width: 400px;
-  height: 250px;
+  user-select: none;
 }
 
 .imageButton {
@@ -101,35 +107,31 @@
 }
 
 @media (max-width: 1024px) {
+  .imageButton {
+    width: 150px;
+    height: auto;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 800px) or (max-height: 800px) {
+  .imageButton {
+    width: 100px;
+    position: absolute;
+    right: -160px;
+    bottom: 0;
+  }
+
   .text {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #fff;
-    z-index: 200;
-    opacity: 0;
-    transition: opacity 500ms ease-in;
-    white-space: pre-line;
+    font-size: 28px;
   }
 
   .buttonContainer {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    position: fixed;
-    bottom: 5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute;
+    right: 20px;
     z-index: 200;
-  }
-
-  .imageButton {
-    width: 100px;
-    height: auto;
-    cursor: pointer;
   }
 }

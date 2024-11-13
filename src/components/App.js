@@ -208,28 +208,32 @@ function App() {
         <img
           src={Letter}
           alt="편지"
-          className={styles.firstGif}
+          className={styles.letter}
           onClick={handleLetterClick}
           style={{ cursor: "pointer" }}
         />
       )}
       {showText && (
-        <div
-          className={`${styles.text} ${showText ? styles.show : ""}`}
-          style={{ whiteSpace: "pre-line" }}
-        >
-          {typedText}
-        </div>
-      )}
-      {showButton && (
-        <div className={styles.buttonContainer}>
-          <img
-            src={Uroko}
-            alt="Button"
-            className={styles.imageButton}
-            onClick={handleImageClick}
-            style={{ cursor: "pointer" }}
-          />
+        <div className={styles.textMsCotainer}>
+          {showText && (
+            <div
+              className={`${styles.text} ${showText ? styles.show : ""}`}
+              style={{ whiteSpace: "pre-line" }}
+            >
+              {typedText}
+            </div>
+          )}
+          {showButton && (
+            <div className={styles.buttonContainer}>
+              <img
+                src={Uroko}
+                alt="Button"
+                className={styles.imageButton}
+                onClick={handleImageClick}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          )}
         </div>
       )}
       <div className={styles.allCt}>

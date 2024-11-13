@@ -43,24 +43,50 @@ const Home = () => {
         });
       }, 1000);
 
-      // 동영상이 끝난 후 ms-item을 생성하는 interval 설정
       const interval = setInterval(() => {
         if (documents.length > 0 && displayedMs.length < 5) {
           const randomIndex = Math.floor(Math.random() * documents.length);
           const newMs = documents[randomIndex].ms;
 
-          setDisplayedMs((prev) => [
-            ...prev,
-            { value: newMs, position: getRandomPosition(prev) },
-          ]);
+          console.log("원본 문자열:", newMs);
 
-          setTimeout(() => {
-            setDisplayedMs((prev) => prev.filter((_, i) => i !== 0));
-          }, 6000);
+          // 줄 바꿈 처리
+          const transformedMs = newMs
+            .replace(/\\n/g, "<br />")
+            .replace(/\n/g, "<br />");
+
+          console.log("변환된 문자열:", transformedMs); // 변환된 문자열 확인
+
+          // 상태 업데이트
+          setDisplayedMs((prev) => {
+            const updatedMs = [
+              ...prev,
+              {
+                value: transformedMs,
+                position: getRandomPosition(prev),
+                id: Date.now(),
+              }, // 타임스탬프를 ID로 사용
+            ];
+
+            // 개별 메시지에 대한 타이머 설정
+            setTimeout(() => {
+              setDisplayedMs((current) =>
+                current.filter(
+                  (item) => item.id !== updatedMs[updatedMs.length - 1].id
+                )
+              ); // 방금 추가한 메시지만 제거
+            }, 6000); // 6초 후 제거
+
+            console.log("업데이트된 displayedMs:", updatedMs); // 업데이트 상태 확인
+            return updatedMs;
+          });
+        } else {
+          console.log(
+            "documents 배열이 비어있거나 displayedMs가 가득 찼습니다."
+          ); // 디버깅 메시지
         }
-      }, 3000);
+      }, 3000); // 3초마다 새로운 메시지 추가
 
-      // 컴포넌트 언마운트 시 interval 정리
       return () => clearInterval(interval);
     }
   };
@@ -124,18 +150,18 @@ const Home = () => {
         </>
       )}
       <div className="ms-container">
-        {displayedMs.map((msObj, index) => (
+        {displayedMs.map((msObj) => (
           <div
-            key={index}
+            key={msObj.id} // 타임스탬프를 고유 키로 사용
             className="ms-item"
             style={{
-              position: "absolute", // 절대 위치 설정
+              position: "absolute",
               left: `${msObj.position.x}px`,
               top: `${msObj.position.y}px`,
+              animation: `fade-in-out 6s forwards`, // 각 아이템에 대해 독립적인 애니메이션 적용
             }}
-          >
-            {msObj.value}
-          </div>
+            dangerouslySetInnerHTML={{ __html: msObj.value }} // HTML로 렌더링
+          />
         ))}
       </div>
     </div>
