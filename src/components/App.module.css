@@ -70,6 +70,11 @@
   z-index: 200;
 }
 
+.firstGif {
+  width: 400px;
+  height: 250px;
+}
+
 .imageButton {
   width: 200px;
   height: auto;
@@ -93,4 +98,38 @@
   display: flex; /* Flexbox 활성화 */
   flex-direction: column; /* 수직 방향으로 배치 */
   gap: 10rem;
+}
+
+@media (max-width: 1024px) {
+  .text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 500ms ease-in;
+    white-space: pre-line;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 200;
+  }
+
+  .imageButton {
+    width: 100px;
+    height: auto;
+    cursor: pointer;
+  }
 }

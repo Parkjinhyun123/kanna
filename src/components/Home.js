@@ -45,7 +45,7 @@ const Home = () => {
 
       // 동영상이 끝난 후 ms-item을 생성하는 interval 설정
       const interval = setInterval(() => {
-        if (documents.length > 0 && displayedMs.length < 7) {
+        if (documents.length > 0 && displayedMs.length < 5) {
           const randomIndex = Math.floor(Math.random() * documents.length);
           const newMs = documents[randomIndex].ms;
 
@@ -56,9 +56,9 @@ const Home = () => {
 
           setTimeout(() => {
             setDisplayedMs((prev) => prev.filter((_, i) => i !== 0));
-          }, 10000);
+          }, 6000);
         }
-      }, 2000);
+      }, 3000);
 
       // 컴포넌트 언마운트 시 interval 정리
       return () => clearInterval(interval);
@@ -77,9 +77,9 @@ const Home = () => {
   const getRandomPosition = (prevPositions) => {
     let newPosition;
     let isOverlapping;
-    const itemWidth = 100;
-    const itemHeight = 50;
-    const offset = 800;
+    const itemWidth = 100; // ms-item의 너비
+    const itemHeight = 30; // ms-item의 높이 (폰트 사이즈 고려)
+    const offset = 800; // 화면 가장자리 여백
 
     do {
       const x = Math.random() * (window.innerWidth - itemWidth - offset);
@@ -93,21 +93,10 @@ const Home = () => {
       );
     } while (isOverlapping);
 
-    const adjustedX = Math.max(
-      0,
-      Math.min(window.innerWidth - itemWidth - offset, newPosition.x)
-    );
-    const adjustedY = Math.max(
-      0,
-      Math.min(window.innerHeight - itemHeight, newPosition.y)
-    );
-
-    return { x: adjustedX, y: adjustedY };
+    return newPosition;
   };
 
   const opts = {
-    height: "590",
-    width: "900",
     playerVars: {
       autoplay: 0,
     },
