@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Ta from "./Ta";
 import styles from "./App.module.css";
 import Uroko from "../assets/비늘이.png";
-import Uroko1 from "../assets/짠.gif";
+import Uroko1 from "../assets/짠2.gif";
 import Letter from "../assets/편지.png";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
