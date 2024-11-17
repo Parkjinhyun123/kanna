@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Ta from "./Ta";
 import styles from "./App.module.css";
 import Uroko from "../assets/비늘이.png";
-import Uroko1 from "../assets/불시안1.gif";
+import Uroko1 from "../assets/짠.gif";
 import Letter from "../assets/편지.png";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
@@ -37,13 +37,13 @@ function App() {
   const texts = [
     "어서와! \n 우리의 첫번째 오시!",
     "우리 비늘이들도 \n 칸나에게 보여주고 싶은게 \n 하나있어! \n\n 같이 볼까?",
-    "고마워! \n 그럼 보러가자!",
+    "좋아! \n 그럼 보러가자!",
   ];
 
   const secondTexts = [
     "어땠어? \n 칸나의 이야기를 담은 \n 다이어리야 \n\n 더 많은 이야기가 있었지만 \n 적기엔 페이지가 부족했네..",
-    "하지만 그만큼 \n 칸나가 많은 이야기를 \n 써왔다는 거니까 \n\n 좋은게 아닐까? ",
-    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원하고 있을게! ",
+    "하지만 못적은만큼 \n 칸나가 많은 이야기를 \n 써왔다는 거니까",
+    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원할게! ",
     "다음에 다시 만나자 \n\n 생일 축하해! \n\n 우리의 마지막 오시!",
     "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게!",
   ];
