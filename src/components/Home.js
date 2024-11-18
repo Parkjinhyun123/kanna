@@ -87,11 +87,6 @@ const Home = () => {
     }
   }, [lastBack]);
 
-  // 이미지가 변경될 때마다 로그를 찍어보세요
-  useEffect(() => {
-    console.log("Current Image Index:", currentImageIndex);
-  }, [currentImageIndex]);
-
   //파이어 베이스 불러오기
   useEffect(() => {
     const loadDocuments = async () => {
@@ -127,7 +122,6 @@ const Home = () => {
 
     // 문서가 비어 있지 않은지 확인
     if (fetchedDocuments.length === 0) {
-      console.log("문서가 없습니다.");
       return; // 문서가 없으면 더 이상 진행하지 않음
     }
 
@@ -135,10 +129,7 @@ const Home = () => {
       document.fullscreenElement === null &&
       videoIdToFetch === "kIBXQHvgs1c"
     ) {
-      console.log("테스트1");
-      console.log(isIntervalActive);
       setIsVideoEnded(false);
-      console.log("테스트2");
       setIsIntervalActive(true);
       setMsCon(true);
       setLastBack(true); // 이미지 전환 시작
@@ -153,7 +144,7 @@ const Home = () => {
       const usedIndices = new Set();
 
       const interval = setInterval(() => {
-        if (displayedMs.length < 12) {
+        if (displayedMs.length < 7) {
           let randomIndex;
           do {
             randomIndex = Math.floor(Math.random() * fetchedDocuments.length);
@@ -169,7 +160,7 @@ const Home = () => {
           }
 
           const newMs = fetchedDocuments[randomIndex].ms; // 로드된 문서 사용
-          const position = getRandomPosition(usedPositions, newMs);
+          const position = getRandomPosition(newMs); // getRandomPosition 호출
           console.log("Position from getRandomPosition:", position);
           usedPositions.push(position);
           usedIndices.add(randomIndex);
@@ -178,14 +169,21 @@ const Home = () => {
             .replace(/\\n/g, "<br />")
             .replace(/\n/g, "<br />");
 
-          setDisplayedMs((prev) => [
-            ...prev,
-            {
-              value: transformedMs,
-              position: position,
-              id: Date.now(),
-            },
-          ]);
+          const newItem = {
+            value: transformedMs,
+            position: position,
+            id: Date.now(),
+          };
+
+          // ms-item을 추가
+          setDisplayedMs((prev) => [...prev, newItem]);
+
+          // 애니메이션 후 ms-item 제거
+          setTimeout(() => {
+            setDisplayedMs((prev) =>
+              prev.filter((item) => item.id !== newItem.id)
+            );
+          }, 6000); // 6초 후 제거 (애니메이션 시간과 맞춰줌)
         } else {
           console.log("displayedMs가 가득 찼습니다.");
           clearInterval(interval);
@@ -207,54 +205,80 @@ const Home = () => {
     return fetchedDocuments; // 로드된 문서를 반환
   };
 
-  //랜덤 배치 함수
-  const getRandomPosition = (prevPositions, text) => {
+  // 랜덤 좌표 함수
+  const usedPositions = []; // 빈 배열 생성
+  const getRandomPosition = (text) => {
     const container = msContainerRef.current;
 
     if (!container) return { x: 0, y: 0 };
 
-    const offset = 50;
-    const minDistance = 500; // 최소 거리 설정
+    const offset = 50; // 여유 공간
+    const minDistance = 200; // 최소 거리
 
     const measureText = (text) => {
+      if (typeof text !== "string") {
+        console.warn("text가 문자열이 아닙니다. 기본값을 사용합니다.");
+        text = ""; // 기본값 설정
+      }
+
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
-      context.font = "24px Arial"; // 텍스트 폰트 설정
-      const lines = text.split("<br />"); // 줄바꿈을 기준으로 텍스트 분리
+      context.font = "24px Arial";
+      const lines = text.split("<br />");
       const maxWidth = Math.max(
         ...lines.map((line) => context.measureText(line).width)
-      ); // 가장 긴 텍스트의 너비
-      const height = lines.length * 30; // 각 줄의 높이를 30으로 가정
+      );
+      const height = lines.length * 30;
 
-      return {
-        width: maxWidth,
-        height: height,
-      };
+      return { width: maxWidth, height: height };
     };
 
     const { width: itemWidth, height: itemHeight } = measureText(text);
-
     let isValidPosition = false;
     let newPosition = { x: 0, y: 0 };
+    const maxAttempts = 100; // 최대 시도 횟수
+    let attempts = 0;
 
-    while (!isValidPosition) {
-      // 랜덤 x 좌표 생성
+    while (!isValidPosition && attempts < maxAttempts) {
       const x =
-        Math.random() * (container.clientWidth - itemWidth - offset) + offset;
-      // 랜덤 y 좌표 생성
+        Math.random() * (container.clientWidth - itemWidth - 2 * offset) +
+        offset;
       const y =
-        Math.random() * (container.clientHeight - itemHeight - offset) + offset;
+        Math.random() * (container.clientHeight - itemHeight - 2 * offset) +
+        offset;
 
       newPosition = { x, y };
 
-      // x와 y 좌표 모두에 대해 최소 거리 조건 확인
-      isValidPosition = prevPositions.every((pos) => {
-        if (!pos.position) return true; // position이 없으면 거리 체크를 하지 않음
-        const distanceX = Math.abs(pos.position.x - newPosition.x);
-        const distanceY = Math.abs(pos.position.y - newPosition.y);
+      // 충돌 검사
+      isValidPosition = usedPositions.every((pos) => {
+        const distanceX = Math.abs(pos.x - newPosition.x);
+        const distanceY = Math.abs(pos.y - newPosition.y);
         const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
-        return distance >= minDistance; // 최소 거리 조건
+        return distance >= minDistance;
       });
+
+      attempts++;
+    }
+
+    // 최대 시도 횟수를 초과하면 기본 위치 반환
+    if (!isValidPosition) {
+      console.warn("유효한 위치를 찾지 못했습니다.");
+      return {
+        x:
+          Math.random() * (container.clientWidth - itemWidth - 2 * offset) +
+          offset,
+        y:
+          Math.random() * (container.clientHeight - itemHeight - 2 * offset) +
+          offset,
+      };
+    }
+
+    // 새로운 위치 추가
+    usedPositions.push(newPosition);
+
+    // 최대 7개의 위치만 유지하고, 가장 오래된 위치 삭제
+    if (usedPositions.length > 7) {
+      usedPositions.shift(); // 가장 오래된 위치 삭제
     }
 
     return newPosition; // 새로운 위치 반환

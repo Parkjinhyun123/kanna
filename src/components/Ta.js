@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { CSSTransition } from "react-transition-group";
 import "./Ta.css";
-import Logo from "../assets/KannaLogoUp.png";
+import Logo from "../assets/하양 로고.png";
 
 const Ta = ({ onLogoClick, moveUp }) => {
   const [showAnimation, setShowAnimation] = useState(true);
