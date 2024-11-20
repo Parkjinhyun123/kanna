@@ -15,6 +15,12 @@
   src: url("./assets/LibreBaskerville-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "강원교육현옥샘";
+  font-weight: normal;
+  src: url("./assets/강원교육현옥샘.ttf") format("truetype");
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600&display=swap");
 
 html,
@@ -22,8 +28,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "LibreBaskerville-Bold", "LibreBaskerville-Italic",
-    "LibreBaskerville-Regular", "Noto Sans KR", sans-serif;
+  font-family: "강원교육현옥샘", sans-serif;
   height: 100vh;
   width: 100vw;
   overflow: hidden;

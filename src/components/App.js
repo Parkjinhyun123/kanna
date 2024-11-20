@@ -4,23 +4,22 @@ import Ta from "./Ta";
 import styles from "./App.module.css";
 import Uroko from "../assets/비늘이.png";
 import Uroko1 from "../assets/짠2.gif";
-import Letter from "../assets/편지.png";
+import Uroko2 from "../assets/불시안1.gif";
+import Letter from "../assets/편지1.png";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
 
 function App() {
   const [currentAudio, setCurrentAudio] = useState("");
   const audioInstanceRef = useRef(null);
-  const [shuffledFiles, setShuffledFiles] = useState(audioFiles);
   const [showTa, setShowTa] = useState(true);
   const [showGif, setShowGif] = useState(false);
   const [showSecondGif, setShowSecondGif] = useState(false);
-  const [navFilled, setNavFilled] = useState(false);
+  const [showLastGif, setShowLastGif] = useState(false);
   const [showText, setShowText] = useState(false);
   const [typedText, setTypedText] = useState("");
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [showButton, setShowButton] = useState(false);
-  const [showBackground, setShowBackground] = useState(false);
   const [showOutlet, setShowOutlet] = useState(false);
   const [showLetter, setShowLetter] = useState(false);
   const [isVideoEnded, setIsVideoEnded] = useState(false);
@@ -34,18 +33,21 @@ function App() {
   const [videoIdToFetch, setVideoIdToFetch] = useState("MkrAZi7GMpI");
   const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
+  const [isCircleActive, setIsCircleActive] = useState(false);
+  const [bgColor, setBgColor] = useState("transparent"); // 초기 배경 색상
+
   const texts = [
-    "생일 축하해! \n 우리의 첫번째 오시!",
-    "우리 비늘이들이 \n 칸나에게 준비한 생일 선물이 \n 하나있어! \n\n 같이 볼까?",
+    "안녕! \n 우리의 첫번째 오시!",
+    "비늘이들이 \n 칸나에게 준비한 선물이 하나 있는데 \n\n 같이 볼래?",
     "좋아! \n 그럼 보러가자!",
   ];
 
   const secondTexts = [
-    "어땠어? \n 칸나의 이야기를 담은 \n 다이어리야 \n\n 더 많은 이야기가 있었지만 \n 적기엔 페이지가 부족했네..",
-    "하지만 못적은만큼 \n 칸나가 많은 이야기를 \n 써왔다는 거니까",
+    "어땠어? \n 칸나의 이야기를 담은 다이어리야 \n\n 더 많은 이야기가 있었지만 적기엔 페이지가 부족했네..",
+    "하지만 못적은만큼 \n 칸나가 많은 이야기를 써왔다는 거니까 \n\n 좋다고 생각해!",
     "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원할게! ",
-    "다음에 다시 만나자 \n\n 우리의 마지막 오시!",
-    "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게!",
+    "다음에 다시 만나자 \n\n 생일 축하해! \n\n 우리의 마지막 오시!",
+    "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게",
   ];
 
   const toggleBackground = () => {
@@ -57,7 +59,6 @@ function App() {
       setSecondTextIndex(0);
       setShowText(true);
       setTypedText("");
-      setNavFilled(false);
       typeSecondText(secondTexts[0], () => {
         setIsSecondTextComplete(true);
       });
@@ -65,9 +66,7 @@ function App() {
   };
 
   const playRandomAudio = () => {
-    const selectedAudio =
-      shuffledFiles[Math.floor(Math.random() * shuffledFiles.length)];
-    setCurrentAudio(selectedAudio);
+    setCurrentAudio(audioFiles);
   };
 
   const handleTaLogoClick = () => {
@@ -133,9 +132,9 @@ function App() {
       } else {
         setShowText(false);
         setShowButton(false);
-        setShowSecondGif(true);
+        setShowLastGif(true);
         setTimeout(() => {
-          setShowSecondGif(false);
+          setShowLastGif(false);
           setShowLetter(true);
         }, 3000);
       }
@@ -150,15 +149,12 @@ function App() {
         setTimeout(() => {
           setShowText(false);
           setShowButton(false);
-          setShowGif(true);
+          setShowSecondGif(true);
           setTimeout(() => {
             setShowOutlet(true);
-            setShowGif(false);
+            setShowSecondGif(false);
           }, 3000);
         }, 500);
-        setTimeout(() => {
-          setNavFilled(true);
-        }, 800);
       });
     }
   };
@@ -168,6 +164,12 @@ function App() {
     setVideoIdToFetch("kIBXQHvgs1c");
     setShowOutlet(true);
     setIsVideoEnded(false);
+
+    // 원 활성화 상태 변경
+    setIsCircleActive(true);
+
+    // 배경 색상 변경
+    setBgColor("rgba(0, 0, 255, 0.5)"); // 원하는 색으로 변경
   };
 
   useEffect(() => {
@@ -192,16 +194,19 @@ function App() {
 
   return (
     <div className={styles.App}>
+      {isCircleActive && <div className={styles.circle}></div>}
       <div
-        className={`${styles.background} ${
-          showBackground ? styles.moveUp : ""
-        }`}
+        className={styles.background}
+        style={{ backgroundColor: bgColor }}
       ></div>
       {showTa && <Ta onLogoClick={handleTaLogoClick} />}
       {showGif && (
         <img src={Uroko1} alt="비늘이 움짤" className={styles.firstGif} />
       )}
       {showSecondGif && (
+        <img src={Uroko2} alt="비늘이 움짤" className={styles.firstGif} />
+      )}
+      {showLastGif && (
         <img src={Uroko1} alt="비늘이 움짤" className={styles.firstGif} />
       )}
       {showLetter && (

@@ -132,7 +132,12 @@ const Home = () => {
       setIsVideoEnded(false);
       setIsIntervalActive(true);
       setMsCon(true);
-      setLastBack(true); // 이미지 전환 시작
+      setLastBack(true);
+      setVideoId(null);
+
+      setTimeout(() => {
+        setVideoId("kIBXQHvgs1c");
+      }, 67000);
 
       // 오디오 재생
       audioRef.current.volume = 0.4;
@@ -161,7 +166,6 @@ const Home = () => {
 
           const newMs = fetchedDocuments[randomIndex].ms; // 로드된 문서 사용
           const position = getRandomPosition(newMs); // getRandomPosition 호출
-          console.log("Position from getRandomPosition:", position);
           usedPositions.push(position);
           usedIndices.add(randomIndex);
 
@@ -185,7 +189,6 @@ const Home = () => {
             );
           }, 6000); // 6초 후 제거 (애니메이션 시간과 맞춰줌)
         } else {
-          console.log("displayedMs가 가득 찼습니다.");
           clearInterval(interval);
           setIsIntervalActive(false);
         }
@@ -204,20 +207,18 @@ const Home = () => {
     setDocuments(fetchedDocuments);
     return fetchedDocuments; // 로드된 문서를 반환
   };
-
-  // 랜덤 좌표 함수
   const usedPositions = []; // 빈 배열 생성
-  const getRandomPosition = (text) => {
+
+  const getRandomPosition = (text, count) => {
     const container = msContainerRef.current;
 
     if (!container) return { x: 0, y: 0 };
 
     const offset = 50; // 여유 공간
-    const minDistance = 200; // 최소 거리
+    const minDistance = 300; // 최소 거리
 
     const measureText = (text) => {
       if (typeof text !== "string") {
-        console.warn("text가 문자열이 아닙니다. 기본값을 사용합니다.");
         text = ""; // 기본값 설정
       }
 
@@ -239,7 +240,8 @@ const Home = () => {
     const maxAttempts = 100; // 최대 시도 횟수
     let attempts = 0;
 
-    while (!isValidPosition && attempts < maxAttempts) {
+    while (attempts < maxAttempts) {
+      // 랜덤 좌표 생성
       const x =
         Math.random() * (container.clientWidth - itemWidth - 2 * offset) +
         offset;
@@ -249,20 +251,29 @@ const Home = () => {
 
       newPosition = { x, y };
 
-      // 충돌 검사
-      isValidPosition = usedPositions.every((pos) => {
-        const distanceX = Math.abs(pos.x - newPosition.x);
-        const distanceY = Math.abs(pos.y - newPosition.y);
+      // 충돌 검사: 마지막 3개의 이전 위치와 최소 거리 확인
+      const positionsToCheck = usedPositions.slice(-3); // 마지막 3개의 위치
+      isValidPosition = true; // 초기값을 true로 설정
+
+      for (const pos of positionsToCheck) {
+        const distanceX = newPosition.x - pos.x;
+        const distanceY = newPosition.y - pos.y;
         const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
-        return distance >= minDistance;
-      });
+
+        if (distance < minDistance) {
+          isValidPosition = false; // 최소 거리 미달 시 false로 설정
+          break; // 충돌이 발생하면 루프 종료
+        }
+      }
+
+      if (isValidPosition) {
+        break; // 유효한 위치를 찾으면 루프 종료
+      }
 
       attempts++;
     }
 
-    // 최대 시도 횟수를 초과하면 기본 위치 반환
     if (!isValidPosition) {
-      console.warn("유효한 위치를 찾지 못했습니다.");
       return {
         x:
           Math.random() * (container.clientWidth - itemWidth - 2 * offset) +

@@ -10,7 +10,7 @@
 
 .background {
   position: absolute;
-  z-index: -1;
+  z-index: -2;
   top: 0;
   left: 0;
   width: 100%;
@@ -21,11 +21,24 @@
     rgba(20, 20, 70, 1) 50%,
     rgba(30, 30, 100, 1) 100%
   );
-  transition: transform 0.5s ease; /* transform을 사용한 애니메이션 효과 */
+  transition: background-color 0.5s ease; /* 배경 색상 변경 애니메이션 */
 }
 
-.moveUp {
-  transform: translateY(-100%); /* 위로 이동 */
+.circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 71, 171, 1) 0%,
+    rgba(28, 169, 201, 1) 100%
+  );
+  transform: translate(-50%, -50%) scale(0);
+  animation: ripple 2s forwards;
+  z-index: 1;
 }
 
 .firstGif {
@@ -51,8 +64,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  font-size: 36px;
-  font-weight: bold;
+  font-size: 48px;
+  /* font-weight: bold; */
   color: #fff;
   z-index: 200;
   opacity: 0;
@@ -133,5 +146,16 @@
     position: absolute;
     right: 20px;
     z-index: 200;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0; /* 초기 투명도 */
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(10); /* 원하는 크기로 확장 */
+    opacity: 1; /* 최종 투명도 */
   }
 }

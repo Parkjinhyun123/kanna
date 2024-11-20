@@ -48,6 +48,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  z-index: 2;
   animation: fadeIn 60s forwards; /* 60초 동안 opacity가 0에서 1로 변하는 애니메이션 */
 }
 
@@ -103,11 +104,11 @@
 
 .ms-item {
   display: block;
-  font-size: 24px;
+  font-size: 38px;
   color: #fff;
-  font-weight: bold;
+  /* font-weight: bold; */
   padding: 30px;
-  text-shadow: 3px 1px 2px #373584;
+  text-shadow: 3px 1px 2px #222;
   transition: opacity 6s linear;
   white-space: pre-wrap;
   z-index: 400;
