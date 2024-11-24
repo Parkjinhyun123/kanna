@@ -4,6 +4,7 @@
   src: url("./assets/강원교육현옥샘.woff2") format("woff2"),
     url("./assets/강원교육현옥샘.woff") format("woff"),
     url("./assets/강원교육현옥샘.ttf") format("truetype");
+  font-display: block;
 }
 
 html,
