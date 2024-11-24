@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Home.css";
 import YouTube from "react-youtube";
 import Uroko from "../assets/비늘이.png";
 import { useOutletContext } from "react-router-dom";
-// import Last from "../assets/bye.jpg";
 import { fetchDocumentsWithMsField } from "../api/firebase";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = () => {
   const { toggleBackground, videoIdToFetch, isVideoEnded, setIsVideoEnded } =
@@ -114,27 +114,177 @@ const Home = () => {
       .catch((error) => console.error("Error:", error));
   }, [videoIdToFetch]);
 
-  const handleVideoEnd = async () => {
-    setIsVideoEnded(true);
+  const itemWidth = 150; // 원하는 아이템의 너비
+  const itemHeight = 50; // 원하는 아이템의 높이
+  const spacing = 150; // 아이템 간의 간격
 
-    // 문서 불러오기
+  const getRandomPosition = (
+    itemWidth,
+    itemHeight,
+    containerWidth,
+    containerHeight,
+    offset = 50
+  ) => {
+    // 중앙에 가깝게 위치를 생성하기 위해 중앙을 기준으로 랜덤하게 생성
+    const x =
+      Math.random() * (containerWidth - itemWidth - offset * 2) + offset;
+    const y =
+      Math.random() * (containerHeight - itemHeight - offset * 2) + offset;
+    return { x: Math.round(x), y: Math.round(y) };
+  };
+
+  const generateUniquePosition = (
+    existingItems,
+    containerRef,
+    spacing = 20,
+    itemWidth = 100,
+    itemHeight = 50
+  ) => {
+    if (!containerRef.current) return null; // 컨테이너가 없는 경우
+
+    const containerWidth = containerRef.current.offsetWidth;
+    const containerHeight = containerRef.current.offsetHeight;
+
+    let position;
+    let attempts = 0;
+    const maxAttempts = 100; // 최대 시도 횟수
+
+    do {
+      position = getRandomPosition(
+        itemWidth,
+        itemHeight,
+        containerWidth,
+        containerHeight
+      );
+      attempts++;
+    } while (
+      isOverlapping(position, existingItems, itemWidth, itemHeight, spacing) &&
+      attempts < maxAttempts
+    );
+
+    return attempts < maxAttempts ? position : null; // 성공적으로 위치를 찾으면 반환
+  };
+
+  const addMsItem = (newMs) => {
+    const transformedMs = newMs
+      .replace(/\\n/g, "<br />")
+      .replace(/\n/g, "<br />");
+
+    const newItem = {
+      value: transformedMs,
+      position: null,
+      id: uuidv4(),
+      ref: React.createRef(),
+    };
+
+    let position = generateUniquePosition(displayedMs, msContainerRef);
+
+    // 위치가 유효한 경우에만 진행
+    if (position) {
+      newItem.position = position; // 유효한 위치가 있으면 업데이트
+
+      // 상태를 업데이트하면서 아이템 추가
+      setDisplayedMs((prev) => {
+        const updatedItems = [...prev];
+
+        // 겹침 검사
+        const isOverlappingDetected = updatedItems.some((existingItem) => {
+          return isOverlapping(
+            position,
+            [existingItem],
+            itemWidth,
+            itemHeight,
+            spacing
+          );
+        });
+
+        // 겹치는 경우 아이템 추가하지 않음
+        if (isOverlappingDetected) {
+          return prev; // 상태를 변경하지 않음
+        }
+
+        // 새로운 아이템 추가
+        updatedItems.push(newItem);
+
+        // 최대 아이템 수 검사
+        const maxItems = 6;
+        if (updatedItems.length > maxItems) {
+          updatedItems.shift();
+        }
+
+        return updatedItems; // 새로운 상태 반환
+      });
+
+      // 애니메이션 후 ms-item 제거 (6000ms 유지)
+      setTimeout(() => {
+        handleItemRemoval(newItem.id); // 아이템 제거
+      }, 6000);
+    } else {
+      console.error("모든 위치를 소진했습니다.");
+    }
+  };
+
+  const isOverlapping = (
+    newPosition,
+    existingItems,
+    itemWidth,
+    itemHeight,
+    spacing
+  ) => {
+    return existingItems.some((existingItem) => {
+      const existingX = existingItem.position.x;
+      const existingY = existingItem.position.y;
+
+      // 겹침 검사 로직
+      return (
+        newPosition.x < existingX + itemWidth + spacing &&
+        newPosition.x + itemWidth > existingX - spacing &&
+        newPosition.y < existingY + itemHeight + spacing &&
+        newPosition.y + itemHeight > existingY - spacing
+      );
+    });
+  };
+
+  const handleItemRemoval = (itemId) => {
+    setDisplayedMs((prev) => prev.filter((item) => item.id !== itemId));
+  };
+
+  // 문서 불러오기 함수
+  const loadDocuments = async () => {
+    const fetchedDocuments = await fetchDocumentsWithMsField("KANNA");
+    setDocuments(fetchedDocuments);
+    return fetchedDocuments; // 로드된 문서를 반환
+  };
+
+  const handleVideoEnd = async () => {
     const fetchedDocuments = await loadDocuments();
+
+    if (videoIdToFetch === "MkrAZi7GMpI") {
+      setIsVideoEnded(true);
+    }
 
     // 문서가 비어 있지 않은지 확인
     if (fetchedDocuments.length === 0) {
       return; // 문서가 없으면 더 이상 진행하지 않음
     }
 
+    if (!document.fullscreenElement === null) {
+      setIsVideoEnded(false);
+    }
+
+    // 전체화면이 아니고 비디오 ID가 맞는 경우
     if (
       document.fullscreenElement === null &&
       videoIdToFetch === "kIBXQHvgs1c"
     ) {
+      // 초기 상태 리셋
       setIsVideoEnded(false);
       setIsIntervalActive(true);
       setMsCon(true);
       setLastBack(true);
       setVideoId(null);
 
+      // 67초 후에 비디오 ID 설정
       setTimeout(() => {
         setVideoId("kIBXQHvgs1c");
       }, 67000);
@@ -145,11 +295,11 @@ const Home = () => {
         console.error("Audio play failed:", error);
       });
 
-      const usedPositions = [];
       const usedIndices = new Set();
 
+      // 랜덤 문서 선택 및 추가
       const interval = setInterval(() => {
-        if (displayedMs.length < 7) {
+        if (displayedMs.length < 6) {
           let randomIndex;
           do {
             randomIndex = Math.floor(Math.random() * fetchedDocuments.length);
@@ -158,6 +308,7 @@ const Home = () => {
             usedIndices.size < fetchedDocuments.length
           );
 
+          // 모든 문서를 사용한 경우
           if (usedIndices.size >= fetchedDocuments.length) {
             clearInterval(interval);
             setIsIntervalActive(false);
@@ -165,134 +316,22 @@ const Home = () => {
           }
 
           const newMs = fetchedDocuments[randomIndex].ms; // 로드된 문서 사용
-          const position = getRandomPosition(newMs); // getRandomPosition 호출
-          usedPositions.push(position);
           usedIndices.add(randomIndex);
 
-          const transformedMs = newMs
-            .replace(/\\n/g, "<br />")
-            .replace(/\n/g, "<br />");
-
-          const newItem = {
-            value: transformedMs,
-            position: position,
-            id: Date.now(),
-          };
-
-          // ms-item을 추가
-          setDisplayedMs((prev) => [...prev, newItem]);
-
-          // 애니메이션 후 ms-item 제거
-          setTimeout(() => {
-            setDisplayedMs((prev) =>
-              prev.filter((item) => item.id !== newItem.id)
-            );
-          }, 6000); // 6초 후 제거 (애니메이션 시간과 맞춰줌)
+          // 아이템 추가
+          addMsItem(newMs); // addMsItem 호출
         } else {
           clearInterval(interval);
           setIsIntervalActive(false);
         }
-      }, 1000); // 2000ms 간격 설정
+      }, 1000); // 1000ms 간격 설정
 
+      // 시간 초과 시 인터벌 클리어
       setTimeout(() => {
         clearInterval(interval);
         setIsIntervalActive(false);
       }, 65000);
     }
-  };
-
-  // 문서 불러오기 함수
-  const loadDocuments = async () => {
-    const fetchedDocuments = await fetchDocumentsWithMsField("KANNA");
-    setDocuments(fetchedDocuments);
-    return fetchedDocuments; // 로드된 문서를 반환
-  };
-  const usedPositions = []; // 빈 배열 생성
-
-  const getRandomPosition = (text, count) => {
-    const container = msContainerRef.current;
-
-    if (!container) return { x: 0, y: 0 };
-
-    const offset = 50; // 여유 공간
-    const minDistance = 300; // 최소 거리
-
-    const measureText = (text) => {
-      if (typeof text !== "string") {
-        text = ""; // 기본값 설정
-      }
-
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      context.font = "24px Arial";
-      const lines = text.split("<br />");
-      const maxWidth = Math.max(
-        ...lines.map((line) => context.measureText(line).width)
-      );
-      const height = lines.length * 30;
-
-      return { width: maxWidth, height: height };
-    };
-
-    const { width: itemWidth, height: itemHeight } = measureText(text);
-    let isValidPosition = false;
-    let newPosition = { x: 0, y: 0 };
-    const maxAttempts = 100; // 최대 시도 횟수
-    let attempts = 0;
-
-    while (attempts < maxAttempts) {
-      // 랜덤 좌표 생성
-      const x =
-        Math.random() * (container.clientWidth - itemWidth - 2 * offset) +
-        offset;
-      const y =
-        Math.random() * (container.clientHeight - itemHeight - 2 * offset) +
-        offset;
-
-      newPosition = { x, y };
-
-      // 충돌 검사: 마지막 3개의 이전 위치와 최소 거리 확인
-      const positionsToCheck = usedPositions.slice(-3); // 마지막 3개의 위치
-      isValidPosition = true; // 초기값을 true로 설정
-
-      for (const pos of positionsToCheck) {
-        const distanceX = newPosition.x - pos.x;
-        const distanceY = newPosition.y - pos.y;
-        const distance = Math.sqrt(distanceX ** 2 + distanceY ** 2);
-
-        if (distance < minDistance) {
-          isValidPosition = false; // 최소 거리 미달 시 false로 설정
-          break; // 충돌이 발생하면 루프 종료
-        }
-      }
-
-      if (isValidPosition) {
-        break; // 유효한 위치를 찾으면 루프 종료
-      }
-
-      attempts++;
-    }
-
-    if (!isValidPosition) {
-      return {
-        x:
-          Math.random() * (container.clientWidth - itemWidth - 2 * offset) +
-          offset,
-        y:
-          Math.random() * (container.clientHeight - itemHeight - 2 * offset) +
-          offset,
-      };
-    }
-
-    // 새로운 위치 추가
-    usedPositions.push(newPosition);
-
-    // 최대 7개의 위치만 유지하고, 가장 오래된 위치 삭제
-    if (usedPositions.length > 7) {
-      usedPositions.shift(); // 가장 오래된 위치 삭제
-    }
-
-    return newPosition; // 새로운 위치 반환
   };
 
   // 유튜브 API 자동재생 막기
@@ -335,6 +374,7 @@ const Home = () => {
             {displayedMs.map((msObj) => (
               <div
                 key={msObj.id}
+                ref={msObj.ref} // 고유 ref 사용
                 className="ms-item"
                 style={{
                   position: "absolute",
@@ -342,7 +382,7 @@ const Home = () => {
                   top: `${msObj.position.y}px`,
                   animation: `fade-in-out 6s forwards`,
                 }}
-                dangerouslySetInnerHTML={{ __html: msObj.value }}
+                dangerouslySetInnerHTML={{ __html: msObj.value }} // HTML로 내용 설정
               />
             ))}
           </div>

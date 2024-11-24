@@ -37,7 +37,7 @@
     rgba(28, 169, 201, 1) 100%
   );
   transform: translate(-50%, -50%) scale(0);
-  animation: ripple 2s forwards;
+  animation: ripple 1s forwards;
   z-index: 1;
 }
 
@@ -117,6 +117,21 @@
   display: flex; /* Flexbox 활성화 */
   flex-direction: column; /* 수직 방향으로 배치 */
   gap: 10rem;
+}
+
+.letter {
+  opacity: 0; /* 기본적으로 숨김 */
+  transition: opacity 0.5s ease-in; /* 부드러운 전환 효과 */
+}
+
+.letter.visible {
+  opacity: 1; /* 보일 때의 상태 */
+}
+
+@media (min-width: 2560px) {
+  .text {
+    font-size: 54px;
+  }
 }
 
 @media (max-width: 1024px) {

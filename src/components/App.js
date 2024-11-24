@@ -37,17 +37,17 @@ function App() {
   const [bgColor, setBgColor] = useState("transparent"); // 초기 배경 색상
 
   const texts = [
-    "안녕! \n 우리의 첫번째 오시!",
-    "비늘이들이 \n 칸나에게 준비한 선물이 하나 있는데 \n\n 같이 볼래?",
+    "안녕! \n 우리의 첫 번째 오시!",
+    "비늘이들이 \n 칸나를 위해 준비한 선물이 하나 있는데 \n\n 같이 볼래?",
     "좋아! \n 그럼 보러가자!",
   ];
 
   const secondTexts = [
-    "어땠어? \n 칸나의 이야기를 담은 다이어리야 \n\n 더 많은 이야기가 있었지만 적기엔 페이지가 부족했네..",
-    "하지만 못적은만큼 \n 칸나가 많은 이야기를 써왔다는 거니까 \n\n 좋다고 생각해!",
-    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원할게! ",
-    "다음에 다시 만나자 \n\n 생일 축하해! \n\n 우리의 마지막 오시!",
+    "어땠어? \n 칸나의 이야기를 담은 다이어리야 \n\n 더 많은 이야기가 있지만 적기엔 시간이 부족했네...",
+    "하지만 못 적은만큼 \n 칸나가 많은 이야기를 써왔다는 거니까 \n\n 좋다고 생각해!",
+    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원하고 있을거야 ",
     "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게",
+    "그리고 생일 축하해! \n\n  우리의 마지막 오시!  \n\n 언젠가 꼭 다시 만나자 ",
   ];
 
   const toggleBackground = () => {
@@ -105,6 +105,7 @@ function App() {
   const typeSecondText = (text, callback) => {
     let index = 0;
     setTypedText("");
+    setIsVideoEnded(false);
     setIsTyping(true); // 타이핑 시작
     const typingInterval = setInterval(() => {
       if (index < text.length) {
@@ -163,8 +164,7 @@ function App() {
     setShowLetter(false);
     setVideoIdToFetch("kIBXQHvgs1c");
     setShowOutlet(true);
-    setIsVideoEnded(false);
-
+    setIsVideoEnded(false); // 상태 업데이트
     // 원 활성화 상태 변경
     setIsCircleActive(true);
 
@@ -215,7 +215,11 @@ function App() {
           alt="편지"
           className={styles.letter}
           onClick={handleLetterClick}
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            opacity: showLetter ? 1 : 0,
+            transition: "opacity 0.5s ease-in",
+          }}
         />
       )}
       {showText && (

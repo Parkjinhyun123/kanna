@@ -76,16 +76,20 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90%;
-  height: 90%;
+  width: 90vw;
+  height: 90vh;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* padding: 10rem; */
+  /* padding: 3rem; */
   z-index: 3000;
   user-select: none;
   word-break: keep-all;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 50px;
 }
 
 .center-point {
@@ -98,23 +102,19 @@
   padding: 24px;
 }
 
-.ms-container:hover {
-  z-index: 1;
-}
-
 .ms-item {
   display: block;
-  font-size: 38px;
+  font-size: 2rem;
   color: #fff;
-  /* font-weight: bold; */
-  padding: 30px;
   text-shadow: 3px 1px 2px #222;
   transition: opacity 6s linear;
   white-space: pre-wrap;
   z-index: 400;
   opacity: 1;
-  width: 800px;
-  margin: 30px;
+  margin: 30px auto; /* 위아래 30px, 좌우 자동으로 중앙 정렬 */
+  max-width: 80%; /* 최대 너비 설정 */
+  padding: 20px; /* 텍스트 주변에 여백 추가 */
+  box-sizing: border-box; /* 패딩을 너비 계산에 포함 */
 }
 
 @keyframes fade-in-out {
@@ -139,7 +139,7 @@
   }
 
   .ms-item {
-    font-size: 32px;
+    font-size: 2.5rem;
   }
 }
 
@@ -185,7 +185,7 @@
 
 @keyframes fadeIn {
   from {
-    opacity: 0;
+    opacity: 0.4;
   }
   to {
     opacity: 1;
