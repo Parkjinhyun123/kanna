@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import Ta from "./Ta";
 import styles from "./App.module.css";
-import Uroko from "../assets/비늘이.png";
+import Uroko from "../assets/비늘이2.png";
+import UrokoHover from "../assets/Hover.png";
 import Uroko1 from "../assets/짠2.gif";
 import Uroko2 from "../assets/불시안1.gif";
-import Letter from "../assets/편지1.png";
+import Letter from "../assets/편지1.jpg";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
 
@@ -35,6 +36,8 @@ function App() {
 
   const [isCircleActive, setIsCircleActive] = useState(false);
   const [bgColor, setBgColor] = useState("transparent"); // 초기 배경 색상
+
+  const [isHover, setIsHover] = useState(false); // 호버 상태 추가
 
   const texts = [
     "안녕! \n 우리의 첫 번째 오시!",
@@ -86,18 +89,41 @@ function App() {
     }, 3000);
   };
 
+  const audioFile = ["/Sound/타이핑.mp3"]; // 기계식 키보드 소리 파일
+
+  const playAudio = () => {
+    if (audioInstanceRef.current) {
+      audioInstanceRef.current.pause();
+      audioInstanceRef.current.currentTime = 0; // 오디오를 처음으로 되돌림
+    }
+
+    const newAudioInstance = new Audio(audioFile[0]); // 새 오디오 인스턴스 생성
+    newAudioInstance.volume = 0.5;
+    audioInstanceRef.current = newAudioInstance;
+    newAudioInstance.play();
+  };
+
   const typeText = (text, callback) => {
     let index = 0;
     setTypedText("");
-    setIsTyping(true); // 타이핑 시작
+    setIsTyping(true);
     const typingInterval = setInterval(() => {
       if (index < text.length) {
         setTypedText((prev) => prev + text[index]);
+        if (index === 0 || text[index - 1] === "\n") {
+          playAudio(); // 첫 글자 출력 시 오디오 재생
+        }
         index++;
       } else {
         clearInterval(typingInterval);
-        setIsTyping(false); // 타이핑 완료
+        setIsTyping(false);
         if (callback) callback();
+
+        // 모든 텍스트가 출력된 후 오디오 멈추기
+        if (audioInstanceRef.current) {
+          audioInstanceRef.current.pause();
+          audioInstanceRef.current.src = "";
+        }
       }
     }, 100);
   };
@@ -106,18 +132,37 @@ function App() {
     let index = 0;
     setTypedText("");
     setIsVideoEnded(false);
-    setIsTyping(true); // 타이핑 시작
+    setIsTyping(true);
     const typingInterval = setInterval(() => {
       if (index < text.length) {
         setTypedText((prev) => prev + text[index]);
+        if (index === 0 || text[index - 1] === "\n") {
+          playAudio(); // 첫 글자 출력 시 오디오 재생
+        }
         index++;
       } else {
         clearInterval(typingInterval);
-        setIsTyping(false); // 타이핑 완료
+        setIsTyping(false);
         if (callback) callback();
+
+        // 모든 텍스트가 출력된 후 오디오 멈추기
+        if (audioInstanceRef.current) {
+          audioInstanceRef.current.pause();
+          audioInstanceRef.current.src = "";
+        }
       }
     }, 100);
   };
+
+  // 모든 텍스트가 출력된 후 오디오 끄기
+  useEffect(() => {
+    if (isText0Complete && isText1Complete && isSecondTextComplete) {
+      if (audioInstanceRef.current) {
+        audioInstanceRef.current.pause();
+        audioInstanceRef.current.src = "";
+      }
+    }
+  }, [isText0Complete, isText1Complete, isSecondTextComplete]);
 
   const handleImageClick = () => {
     if (isTyping) return; // 타이핑 중일 경우 클릭 무시
@@ -192,6 +237,14 @@ function App() {
     };
   }, [currentAudio]);
 
+  const handleMouseEnter = () => {
+    setIsHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHover(false);
+  };
+
   return (
     <div className={styles.App}>
       {isCircleActive && <div className={styles.circle}></div>}
@@ -235,10 +288,12 @@ function App() {
           {showButton && (
             <div className={styles.buttonContainer}>
               <img
-                src={Uroko}
+                src={isHover ? UrokoHover : Uroko} // 호버 상태에 따라 이미지 변경
                 alt="Button"
                 className={styles.imageButton}
                 onClick={handleImageClick}
+                onMouseEnter={handleMouseEnter} // 마우스 엔터 이벤트
+                onMouseLeave={handleMouseLeave} // 마우스 리브 이벤트
                 style={{ cursor: "pointer" }}
               />
             </div>

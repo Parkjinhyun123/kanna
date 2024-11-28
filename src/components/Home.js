@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Home.css";
 import YouTube from "react-youtube";
-import Uroko from "../assets/비늘이.png";
+import Uroko from "../assets/비늘이2.png";
+import UrokoHover from "../assets/Hover.png";
 import { useOutletContext } from "react-router-dom";
 import { fetchDocumentsWithMsField } from "../api/firebase";
 import { v4 as uuidv4 } from "uuid";
@@ -14,13 +15,14 @@ const Home = () => {
   const [videoId, setVideoId] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [displayedMs, setDisplayedMs] = useState([]);
-  const audioRef = useRef(new Audio("/Sound/푸보용.mp3"));
+  const audioRef = useRef(new Audio("/Sound/피날레.mp3"));
   const msContainerRef = useRef(null);
   const [msCon, setMsCon] = useState(false);
   const [images, setImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const playerRef = useRef(null);
   const [isIntervalActive, setIsIntervalActive] = useState(false);
+  const [isHover, setIsHover] = useState(false);
 
   const handleReady = (event) => {
     playerRef.current = event.target;
@@ -287,7 +289,7 @@ const Home = () => {
       // 67초 후에 비디오 ID 설정
       setTimeout(() => {
         setVideoId("kIBXQHvgs1c");
-      }, 67000);
+      }, 70000);
 
       // 오디오 재생
       audioRef.current.volume = 0.4;
@@ -341,6 +343,14 @@ const Home = () => {
     },
   };
 
+  const handleMouseEnter = () => {
+    setIsHover(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHover(false);
+  };
+
   return (
     <div className="Youtube-container">
       {lastBack && images.length > 0 && (
@@ -358,8 +368,10 @@ const Home = () => {
           {isVideoEnded && (
             <div className="video-ended-image" onClick={toggleBackground}>
               <img
-                src={Uroko}
+                src={isHover ? UrokoHover : Uroko}
                 alt="Video Ended"
+                onMouseEnter={handleMouseEnter} // 마우스 엔터 이벤트
+                onMouseLeave={handleMouseLeave} // 마우스 리브 이벤트
                 style={{ cursor: "pointer" }}
               />
             </div>

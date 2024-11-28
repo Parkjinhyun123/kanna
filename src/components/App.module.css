@@ -26,8 +26,8 @@
 
 .circle {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 35%;
+  left: 45%;
   width: 300px;
   height: 300px;
   border-radius: 50%;
@@ -85,9 +85,8 @@
 .buttonContainer {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   position: fixed;
-  bottom: 3%;
+  bottom: 15%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 200;
@@ -95,7 +94,7 @@
 }
 
 .imageButton {
-  width: 200px;
+  width: 10rem;
   height: auto;
   cursor: pointer;
 }
@@ -128,23 +127,38 @@
   opacity: 1; /* 보일 때의 상태 */
 }
 
+@media (min-width: 1920px) {
+  .imageButton {
+    width: 10rem;
+  }
+}
+
 @media (min-width: 2560px) {
   .text {
     font-size: 54px;
   }
-}
 
-@media (max-width: 1024px) {
   .imageButton {
-    width: 150px;
+    width: 10rem;
     height: auto;
     cursor: pointer;
   }
 }
 
+@media (max-width: 1500px) {
+  .imageButton {
+    width: 10rem;
+    height: auto;
+    cursor: pointer;
+  }
+  .buttonContainer {
+    bottom: 10%;
+  }
+}
+
 @media (max-width: 800px) or (max-height: 800px) {
   .imageButton {
-    width: 100px;
+    width: 10rem;
     position: absolute;
     right: -160px;
     bottom: 0;
@@ -166,11 +180,11 @@
 
 @keyframes ripple {
   0% {
-    transform: translate(-50%, -50%) scale(0);
+    transform: scale(0);
     opacity: 0; /* 초기 투명도 */
   }
   100% {
-    transform: translate(-50%, -50%) scale(10); /* 원하는 크기로 확장 */
+    transform: scale(20); /* 원하는 크기로 확장 */
     opacity: 1; /* 최종 투명도 */
   }
 }
