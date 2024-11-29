@@ -37,7 +37,7 @@
     rgba(28, 169, 201, 1) 100%
   );
   transform: translate(-50%, -50%) scale(0);
-  animation: ripple 1s forwards;
+  animation: ripple 2s forwards;
   z-index: 1;
 }
 

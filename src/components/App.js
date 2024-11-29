@@ -225,7 +225,7 @@ function App() {
     setTimeout(() => {
       setShowLastGif(false); // GIF를 숨김
       setLetterOpacity(1); // 서서히 나타나게 설정
-    }, 1000); // 0.5초 후에 실행
+    }, 2000); // 0.5초 후에 실행
   };
 
   const handleLetterClick = () => {
