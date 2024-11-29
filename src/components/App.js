@@ -221,6 +221,7 @@ function App() {
   const handleLastGifClick = () => {
     setGifOpacity(0); // GIF의 opacity를 0으로 설정
     setShowLetter(true); // Letter를 나타나게 설정
+    setGitCommemt(false);
     setTimeout(() => {
       setShowLastGif(false); // GIF를 숨김
       setLetterOpacity(1); // 서서히 나타나게 설정
