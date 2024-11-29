@@ -31,7 +31,7 @@ function App() {
   const [secondTextIndex, setSecondTextIndex] = useState(0);
   const [isSecondTextComplete, setIsSecondTextComplete] = useState(false);
 
-  const [videoIdToFetch, setVideoIdToFetch] = useState("MkrAZi7GMpI");
+  const [videoIdToFetch, setVideoIdToFetch] = useState("paMG8boQ5Ds");
   const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
   const [isCircleActive, setIsCircleActive] = useState(false);
