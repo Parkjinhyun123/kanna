@@ -4,8 +4,9 @@ import Ta from "./Ta";
 import styles from "./App.module.css";
 import Uroko from "../assets/비늘이2.png";
 import UrokoHover from "../assets/Hover.png";
-import Uroko1 from "../assets/통통 비늘.gif";
-import Uroko2 from "../assets/케이크 비늘.gif";
+import Uroko1 from "../assets/등장.gif";
+import Uroko2 from "../assets/케이크.gif";
+import Uroko3 from "../assets/마지막.gif";
 import Letter from "../assets/편지1.jpg";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
@@ -38,6 +39,11 @@ function App() {
   const [bgColor, setBgColor] = useState("transparent"); // 초기 배경 색상
 
   const [isHover, setIsHover] = useState(false); // 호버 상태 추가
+
+  const [gifOpacity, setGifOpacity] = useState(1);
+
+  const [gifComment, setGitCommemt] = useState(false);
+  const [letterOpacity, setLetterOpacity] = useState(0); // 초기값을 0으로 설정
 
   const texts = [
     "안녕! \n 우리의 첫 번째 오시!",
@@ -98,7 +104,7 @@ function App() {
     }
 
     const newAudioInstance = new Audio(audioFile[0]);
-    newAudioInstance.volume = 0.9;
+    newAudioInstance.volume = 0.5;
     audioInstanceRef.current = newAudioInstance;
     newAudioInstance.play();
   };
@@ -180,9 +186,8 @@ function App() {
         setShowButton(false);
         setShowLastGif(true);
         setTimeout(() => {
-          setShowLastGif(false);
-          setShowLetter(true);
-        }, 3000);
+          setGitCommemt(true);
+        }, 5000);
       }
     } else if (currentTextIndex === 0 && isText0Complete) {
       setCurrentTextIndex(1);
@@ -193,28 +198,42 @@ function App() {
       setCurrentTextIndex(2);
       typeText(texts[2], () => {
         setTimeout(() => {
+          if (!showSecondGif) {
+            // 이 조건을 추가
+            setShowSecondGif(true);
+            setTimeout(() => {
+              setGitCommemt(true);
+            }, 4000);
+          }
           setShowText(false);
           setShowButton(false);
-          setShowSecondGif(true);
-          setTimeout(() => {
-            setShowOutlet(true);
-            setShowSecondGif(false);
-          }, 3000);
         }, 500);
       });
     }
+  };
+
+  const handleSecondGifClick = () => {
+    setShowOutlet(true);
+    setShowSecondGif(false);
+    setGitCommemt(false);
+  };
+
+  const handleLastGifClick = () => {
+    setGifOpacity(0); // GIF의 opacity를 0으로 설정
+    setShowLetter(true); // Letter를 나타나게 설정
+    setTimeout(() => {
+      setShowLastGif(false); // GIF를 숨김
+      setLetterOpacity(1); // 서서히 나타나게 설정
+    }, 1000); // 0.5초 후에 실행
   };
 
   const handleLetterClick = () => {
     setShowLetter(false);
     setVideoIdToFetch("kIBXQHvgs1c");
     setShowOutlet(true);
-    setIsVideoEnded(false); // 상태 업데이트
-    // 원 활성화 상태 변경
+    setIsVideoEnded(false);
     setIsCircleActive(true);
-
-    // 배경 색상 변경
-    setBgColor("rgba(0, 0, 255, 0.5)"); // 원하는 색으로 변경
+    setBgColor("rgba(0, 0, 255, 0.5)");
   };
 
   useEffect(() => {
@@ -257,21 +276,48 @@ function App() {
         <img src={Uroko1} alt="비늘이 움짤" className={styles.firstGif} />
       )}
       {showSecondGif && (
-        <img src={Uroko2} alt="비늘이 움짤" className={styles.firstGif} />
+        <div className={styles.gifContainer}>
+          <img
+            src={Uroko2}
+            alt="비늘이 움짤"
+            className={styles.firstGif}
+            style={{ cursor: "pointer" }}
+            onClick={handleSecondGifClick}
+          />
+          {gifComment && (
+            <p className={styles.comment} style={{ left: "51% " }}>
+              날 클릭해줘!
+            </p>
+          )}
+        </div>
       )}
       {showLastGif && (
-        <img src={Uroko1} alt="비늘이 움짤" className={styles.firstGif} />
+        <div className={styles.gifContainer}>
+          <img
+            src={Uroko3}
+            alt="비늘이 움짤"
+            className={styles.firstGif}
+            onClick={handleLastGifClick}
+            style={{
+              cursor: "pointer",
+              opacity: gifOpacity,
+              transition: "opacity 0.5s ease",
+              left: "51%",
+            }} // opacity와 transition 추가
+          />
+          {gifComment && <p className={styles.comment}>날 클릭해줘</p>}
+        </div>
       )}
       {showLetter && (
         <img
           src={Letter}
           alt="편지"
-          className={styles.letter}
+          className={`${styles.letter} fadeIn`}
           onClick={handleLetterClick}
           style={{
             cursor: "pointer",
-            opacity: showLetter ? 1 : 0,
-            transition: "opacity 0.5s ease-in",
+            opacity: letterOpacity,
+            transition: "opacity 0.5s ease",
           }}
         />
       )}

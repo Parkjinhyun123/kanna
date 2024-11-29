@@ -41,6 +41,12 @@
   z-index: 1;
 }
 
+.gifContainer {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
 .firstGif {
   z-index: 200;
   position: absolute;
@@ -48,6 +54,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 .letter {
   z-index: 200;
   width: 400px;
@@ -74,6 +81,20 @@
   user-select: none;
 }
 
+.comment {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 48px;
+  color: #fff;
+  z-index: 200;
+  transition: opacity 500ms ease-in;
+  white-space: pre-line;
+  user-select: none;
+}
+
 .text.show {
   opacity: 1;
 }
@@ -86,7 +107,7 @@
   display: flex;
   justify-content: center;
   position: fixed;
-  bottom: 15%;
+  bottom: 10%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 200;
@@ -105,7 +126,7 @@
   left: 50%;
   transform: translateX(-50%); /* 수평 중앙 정렬 */
   opacity: 1; /* 보이게 설정 */
-  transition: opacity 0.5s ease; /* 애니메이션 효과 */
+  transition: opacity 5s ease; /* 애니메이션 효과 */
 }
 
 .third-text.show {
@@ -116,15 +137,6 @@
   display: flex; /* Flexbox 활성화 */
   flex-direction: column; /* 수직 방향으로 배치 */
   gap: 10rem;
-}
-
-.letter {
-  opacity: 0; /* 기본적으로 숨김 */
-  transition: opacity 0.5s ease-in; /* 부드러운 전환 효과 */
-}
-
-.letter.visible {
-  opacity: 1; /* 보일 때의 상태 */
 }
 
 @media (min-width: 1920px) {
