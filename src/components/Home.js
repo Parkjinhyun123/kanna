@@ -15,7 +15,7 @@ const Home = () => {
   const [videoId, setVideoId] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [displayedMs, setDisplayedMs] = useState([]);
-  const audioRef = useRef(new Audio("/Sound/피날레.mp3"));
+  const audioRef = useRef(new Audio("/Sound/푸보용.mp3"));
   const msContainerRef = useRef(null);
   const [msCon, setMsCon] = useState(false);
   const [images, setImages] = useState([]);
@@ -261,7 +261,7 @@ const Home = () => {
   const handleVideoEnd = async () => {
     const fetchedDocuments = await loadDocuments();
 
-    if (videoIdToFetch === "paMG8boQ5Ds") {
+    if (videoIdToFetch === "MkrAZi7GMpI") {
       setIsVideoEnded(true);
     }
 

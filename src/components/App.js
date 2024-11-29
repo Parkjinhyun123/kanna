@@ -4,8 +4,8 @@ import Ta from "./Ta";
 import styles from "./App.module.css";
 import Uroko from "../assets/비늘이2.png";
 import UrokoHover from "../assets/Hover.png";
-import Uroko1 from "../assets/짠2.gif";
-import Uroko2 from "../assets/불시안1.gif";
+import Uroko1 from "../assets/통통 비늘.gif";
+import Uroko2 from "../assets/케이크 비늘.gif";
 import Letter from "../assets/편지1.jpg";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
@@ -31,7 +31,7 @@ function App() {
   const [secondTextIndex, setSecondTextIndex] = useState(0);
   const [isSecondTextComplete, setIsSecondTextComplete] = useState(false);
 
-  const [videoIdToFetch, setVideoIdToFetch] = useState("paMG8boQ5Ds");
+  const [videoIdToFetch, setVideoIdToFetch] = useState("MkrAZi7GMpI");
   const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
   const [isCircleActive, setIsCircleActive] = useState(false);
@@ -89,16 +89,16 @@ function App() {
     }, 3000);
   };
 
-  const audioFile = ["/Sound/타이핑.mp3"]; // 기계식 키보드 소리 파일
+  const audioFile = ["Sound/글씨.mp3"];
 
   const playAudio = () => {
     if (audioInstanceRef.current) {
       audioInstanceRef.current.pause();
-      audioInstanceRef.current.currentTime = 0; // 오디오를 처음으로 되돌림
+      audioInstanceRef.current.currentTime = 0;
     }
 
-    const newAudioInstance = new Audio(audioFile[0]); // 새 오디오 인스턴스 생성
-    newAudioInstance.volume = 0.5;
+    const newAudioInstance = new Audio(audioFile[0]);
+    newAudioInstance.volume = 0.9;
     audioInstanceRef.current = newAudioInstance;
     newAudioInstance.play();
   };
