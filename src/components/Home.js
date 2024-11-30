@@ -116,7 +116,7 @@ const Home = () => {
       .catch((error) => console.error("Error:", error));
   }, [videoIdToFetch]);
 
-  const itemWidth = 150; // 원하는 아이템의 너비
+  const itemWidth = 200; // 원하는 아이템의 너비
   const itemHeight = 50; // 원하는 아이템의 높이
   const spacing = 150; // 아이템 간의 간격
 
@@ -139,7 +139,7 @@ const Home = () => {
     existingItems,
     containerRef,
     spacing = 20,
-    itemWidth = 100,
+    itemWidth = 200,
     itemHeight = 50
   ) => {
     if (!containerRef.current) return null; // 컨테이너가 없는 경우
