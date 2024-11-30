@@ -113,7 +113,7 @@ const Home = () => {
       .catch((error) => console.error("Error:", error));
   }, [videoIdToFetch]);
 
-  const itemWidth = 200;
+  const itemWidth = 100;
   const itemHeight = 50;
   const spacing = 150;
 
@@ -135,7 +135,7 @@ const Home = () => {
     existingItems,
     containerRef,
     spacing = 20,
-    itemWidth = 200,
+    itemWidth = 100,
     itemHeight = 50
   ) => {
     if (!containerRef.current) return null; // 컨테이너가 없는 경우
