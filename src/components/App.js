@@ -45,6 +45,9 @@ function App() {
   const [gifComment, setGitCommemt] = useState(false);
   const [letterOpacity, setLetterOpacity] = useState(0); // 초기값을 0으로 설정
 
+  const [isSecondGifClickable, setIsSecondGifClickable] = useState(false);
+  const [isLastGifClickable, setIsLastGifClickable] = useState(false);
+
   const texts = [
     "안녕! \n 우리의 첫 번째 오시!",
     "비늘이들이 \n 칸나를 위해 준비한 선물이 있는데 \n\n 같이 볼래?",
@@ -54,7 +57,7 @@ function App() {
   const secondTexts = [
     "어땠어? \n 칸나의 이야기를 담은 다이어리야 \n\n 더 많은 이야기가 있지만 적기엔 시간이 부족했네...",
     "하지만 못 적은만큼 \n 칸나가 많은 이야기를 써왔다는 거니까 \n\n 좋다고 생각해!",
-    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원하고 있을게 ",
+    "벌써 시간이 이렇게 됐네 \n 우리는 언제 어디서든 칸나를 응원하고 있을거야 ",
     "우리는 아이리 칸나라는 \n 이야기 속에서 기다리고 있을게",
     "그리고 생일 축하해! \n\n  우리의 마지막 오시!  \n\n 언젠가 꼭 다시 만나자 ",
   ];
@@ -137,6 +140,7 @@ function App() {
     let index = 0;
     setTypedText("");
     setIsVideoEnded(false);
+    setGitCommemt(false);
     setIsTyping(true);
     const typingInterval = setInterval(() => {
       if (index < text.length) {
@@ -210,17 +214,20 @@ function App() {
   };
 
   const handleSecondGifClick = () => {
+    if (!isSecondGifClickable) return; // 클릭 불가 시 함수 종료
     setShowOutlet(true);
     setShowSecondGif(false);
     setGitCommemt(false);
   };
 
   const handleLastGifClick = () => {
+    if (!isLastGifClickable) return; // 클릭 불가 시 함수 종료
     setGifOpacity(0); // GIF의 opacity를 0으로 설정
     setShowLetter(true); // Letter를 나타나게 설정
     setGitCommemt(false);
     setTimeout(() => {
       setShowLastGif(false); // GIF를 숨김
+      setGitCommemt(false);
       setLetterOpacity(1); // 서서히 나타나게 설정
     }, 2000); // 0.5초 후에 실행
   };
@@ -262,6 +269,26 @@ function App() {
     setIsHover(false);
   };
 
+  useEffect(() => {
+    if (showSecondGif) {
+      const timer = setTimeout(() => {
+        setIsSecondGifClickable(true); // GIF 재생 완료 후 클릭 가능
+      }, 2500); // GIF 재생 시간에 맞춰 조정
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSecondGif]);
+
+  useEffect(() => {
+    if (showLastGif) {
+      const timer = setTimeout(() => {
+        setIsLastGifClickable(true); // GIF 재생 완료 후 클릭 가능
+      }, 4000); // GIF 재생 시간에 맞춰 조정
+
+      return () => clearTimeout(timer);
+    }
+  }, [showLastGif]);
+
   return (
     <div className={styles.App}>
       {isCircleActive && <div className={styles.circle}></div>}
@@ -300,7 +327,7 @@ function App() {
               cursor: "pointer",
               opacity: gifOpacity,
               transition: "opacity 0.5s ease",
-              left: "51%",
+              left: "50.5%",
             }} // opacity와 transition 추가
           />
           {gifComment && <p className={styles.comment}>날 클릭해줘</p>}

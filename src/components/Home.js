@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./Home.css";
 import YouTube from "react-youtube";
 import Uroko from "../assets/비늘이2.png";
@@ -65,6 +65,7 @@ const Home = () => {
       })
       .map((image) => image.src);
   };
+
   useEffect(() => {
     const images = importAll(
       require.context("../assets/back", false, /\.(jpg|jpeg|png|gif)$/)
@@ -113,7 +114,7 @@ const Home = () => {
       .catch((error) => console.error("Error:", error));
   }, [videoIdToFetch]);
 
-  const itemWidth = 100;
+  const itemWidth = 200;
   const itemHeight = 50;
   const spacing = 150;
 
@@ -122,20 +123,22 @@ const Home = () => {
     itemHeight,
     containerWidth,
     containerHeight,
-    offset = 50
+    offset = 50,
+    bottomOffset = 100
   ) => {
     const x =
       Math.random() * (containerWidth - itemWidth - offset * 2) + offset;
     const y =
-      Math.random() * (containerHeight - itemHeight - offset * 2) + offset;
+      Math.random() * (containerHeight - itemHeight - bottomOffset - offset) +
+      offset;
     return { x: Math.round(x), y: Math.round(y) };
   };
 
   const generateUniquePosition = (
     existingItems,
     containerRef,
-    spacing = 20,
-    itemWidth = 100,
+    spacing = 110,
+    itemWidth = 200,
     itemHeight = 50
   ) => {
     if (!containerRef.current) return null; // 컨테이너가 없는 경우
