@@ -32,7 +32,7 @@ function App() {
   const [secondTextIndex, setSecondTextIndex] = useState(0);
   const [isSecondTextComplete, setIsSecondTextComplete] = useState(false);
 
-  const [videoIdToFetch, setVideoIdToFetch] = useState("MkrAZi7GMpI");
+  const [videoIdToFetch, setVideoIdToFetch] = useState("VBmHnTzX1Xo"); //다이어리 아이디
   const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
   const [isCircleActive, setIsCircleActive] = useState(false);
@@ -117,7 +117,7 @@ function App() {
       if (index < text.length) {
         setTypedText((prev) => prev + text[index]);
         if (index === 0 || text[index - 1] === "\n") {
-          playAudio(); // 첫 글자 출력 시 오디오 재생
+          playAudio();
         }
         index++;
       } else {
@@ -125,7 +125,6 @@ function App() {
         setIsTyping(false);
         if (callback) callback();
 
-        // 모든 텍스트가 출력된 후 오디오 멈추기
         if (audioInstanceRef.current) {
           audioInstanceRef.current.pause();
           audioInstanceRef.current.src = "";
@@ -143,7 +142,7 @@ function App() {
       if (index < text.length) {
         setTypedText((prev) => prev + text[index]);
         if (index === 0 || text[index - 1] === "\n") {
-          playAudio(); // 첫 글자 출력 시 오디오 재생
+          playAudio();
         }
         index++;
       } else {
@@ -151,7 +150,6 @@ function App() {
         setIsTyping(false);
         if (callback) callback();
 
-        // 모든 텍스트가 출력된 후 오디오 멈추기
         if (audioInstanceRef.current) {
           audioInstanceRef.current.pause();
           audioInstanceRef.current.src = "";
@@ -160,7 +158,6 @@ function App() {
     }, 100);
   };
 
-  // 모든 텍스트가 출력된 후 오디오 끄기
   useEffect(() => {
     if (isText0Complete && isText1Complete && isSecondTextComplete) {
       if (audioInstanceRef.current) {

@@ -32,7 +32,7 @@ const Home = () => {
   useEffect(() => {
     const handleFullscreenChange = () => {
       if (!document.fullscreenElement && videoIdToFetch === "kIBXQHvgs1c") {
-        handleVideoEnd(); // 전체화면 종료 시 함수 호출
+        handleVideoEnd();
       }
     };
 
@@ -47,7 +47,7 @@ const Home = () => {
   const importAll = (r) => {
     let images = [];
     r.keys().forEach((item) => {
-      const match = item.match(/(\d{4}\.\d{2}\.\d{2})/); // 날짜 형식 변경
+      const match = item.match(/(\d{4}\.\d{2}\.\d{2})/);
       if (match) {
         images.push({ src: r(item), name: item });
       }
@@ -57,7 +57,7 @@ const Home = () => {
       .sort((a, b) => {
         const dateA = new Date(
           a.name.match(/(\d{4}\.\d{2}\.\d{2})/)[0].replace(/\./g, "-")
-        ); // `.`을 `-`로 변환
+        );
         const dateB = new Date(
           b.name.match(/(\d{4}\.\d{2}\.\d{2})/)[0].replace(/\./g, "-")
         );
@@ -65,7 +65,6 @@ const Home = () => {
       })
       .map((image) => image.src);
   };
-  // 이미지 정렬
   useEffect(() => {
     const images = importAll(
       require.context("../assets/back", false, /\.(jpg|jpeg|png|gif)$/)
@@ -73,19 +72,18 @@ const Home = () => {
     setImages(images);
 
     if (lastBack && images.length > 0) {
-      let imageIndex = 0; // 현재 이미지 인덱스
+      let imageIndex = 0;
 
       const interval = setInterval(() => {
-        // 마지막 이미지에 도달했는지 확인
         if (imageIndex < images.length - 1) {
-          imageIndex += 1; // 다음 이미지로 이동
+          imageIndex += 1;
           setCurrentImageIndex(imageIndex);
         } else {
-          clearInterval(interval); // 마지막 이미지 도달 시 인터벌 정리
+          clearInterval(interval);
         }
-      }, 2000); // 2000ms 간격으로 이미지 변경
+      }, 2000);
 
-      return () => clearInterval(interval); // 컴포넌트 언마운트 시 인터벌 정리
+      return () => clearInterval(interval);
     }
   }, [lastBack]);
 
@@ -99,7 +97,6 @@ const Home = () => {
     loadDocuments();
   }, []);
 
-  //유튜브 API
   useEffect(() => {
     audioRef.current.volume = 0.4;
 
@@ -116,9 +113,9 @@ const Home = () => {
       .catch((error) => console.error("Error:", error));
   }, [videoIdToFetch]);
 
-  const itemWidth = 200; // 원하는 아이템의 너비
-  const itemHeight = 50; // 원하는 아이템의 높이
-  const spacing = 150; // 아이템 간의 간격
+  const itemWidth = 200;
+  const itemHeight = 50;
+  const spacing = 150;
 
   const getRandomPosition = (
     itemWidth,
@@ -127,7 +124,6 @@ const Home = () => {
     containerHeight,
     offset = 50
   ) => {
-    // 중앙에 가깝게 위치를 생성하기 위해 중앙을 기준으로 랜덤하게 생성
     const x =
       Math.random() * (containerWidth - itemWidth - offset * 2) + offset;
     const y =
@@ -261,7 +257,7 @@ const Home = () => {
   const handleVideoEnd = async () => {
     const fetchedDocuments = await loadDocuments();
 
-    if (videoIdToFetch === "MkrAZi7GMpI") {
+    if (videoIdToFetch === "VBmHnTzX1Xo") {
       setIsVideoEnded(true);
     }
 
