@@ -45,11 +45,6 @@
   user-select: none;
 }
 
-.lastImage {
-  width: 50vw;
-  height: 50vh;
-}
-
 .navButton {
   position: absolute; /* 절대 위치로 설정 */
   top: 50%; /* 세로 중앙 정렬 */
@@ -75,11 +70,11 @@
 
 @media (min-width: 1920px) {
   .navButton:first-of-type {
-    left: 10rem; /* 왼쪽 버튼을 이미지 왼쪽에 위치 */
+    left: 14rem; /* 왼쪽 버튼을 이미지 왼쪽에 위치 */
   }
 
   .navButton:last-of-type {
-    right: 10rem; /* 오른쪽 버튼을 이미지 오른쪽에 위치 */
+    right: 14rem; /* 오른쪽 버튼을 이미지 오른쪽에 위치 */
   }
 }
 
