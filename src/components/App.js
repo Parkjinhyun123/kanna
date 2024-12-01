@@ -15,7 +15,6 @@ import Letter3 from "../assets/편지3.png";
 import Letter4 from "../assets/편지4.png";
 import Letter5 from "../assets/편지6.png";
 import Letter6 from "../assets/편지5.png";
-import Letter7 from "../assets/칠판.jpg";
 import Modal from "./Modal";
 
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
@@ -252,15 +251,7 @@ function App() {
   }, [showOutlet, handleModalClose]); // showOutlet이 true로 변경될 때 호출
 
   const handleLetterClick = () => {
-    const letterImages = [
-      Letter1,
-      Letter2,
-      Letter3,
-      Letter4,
-      Letter5,
-      Letter6,
-      Letter7,
-    ];
+    const letterImages = [Letter1, Letter2, Letter3, Letter4, Letter5, Letter6];
 
     setShowLetter(false);
 
