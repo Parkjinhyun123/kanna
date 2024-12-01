@@ -23,6 +23,7 @@ const Home = () => {
   const playerRef = useRef(null);
   const [isIntervalActive, setIsIntervalActive] = useState(false);
   const [isHover, setIsHover] = useState(false);
+  const [videoCheck, setVideoCheck] = useState(false);
 
   const handleReady = (event) => {
     playerRef.current = event.target;
@@ -116,7 +117,7 @@ const Home = () => {
 
   const itemWidth = 200;
   const itemHeight = 50;
-  const spacing = 150;
+  const spacing = 200;
 
   const getRandomPosition = (
     itemWidth,
@@ -137,7 +138,7 @@ const Home = () => {
   const generateUniquePosition = (
     existingItems,
     containerRef,
-    spacing = 110,
+    spacing = 150,
     itemWidth = 200,
     itemHeight = 50
   ) => {
@@ -257,6 +258,12 @@ const Home = () => {
     return fetchedDocuments; // 로드된 문서를 반환
   };
 
+  useEffect(() => {
+    if (displayedMs.length >= 6) {
+      setVideoCheck(true);
+    }
+  }, [displayedMs]);
+
   const handleVideoEnd = async () => {
     const fetchedDocuments = await loadDocuments();
 
@@ -276,17 +283,22 @@ const Home = () => {
     // 전체화면이 아니고 비디오 ID가 맞는 경우
     if (
       document.fullscreenElement === null &&
-      videoIdToFetch === "kIBXQHvgs1c"
+      videoIdToFetch === "kIBXQHvgs1c" &&
+      !videoCheck
     ) {
       // 초기 상태 리셋
+      setVideoCheck(true);
+      console.log(videoCheck);
+
       setIsVideoEnded(false);
       setIsIntervalActive(true);
       setMsCon(true);
       setLastBack(true);
       setVideoId(null);
 
-      // 67초 후에 비디오 ID 설정
       setTimeout(() => {
+        setVideoCheck(true);
+        console.log(videoCheck);
         setVideoId("kIBXQHvgs1c");
       }, 70000);
 
@@ -331,7 +343,9 @@ const Home = () => {
       setTimeout(() => {
         clearInterval(interval);
         setIsIntervalActive(false);
-      }, 65000);
+        setVideoCheck(true);
+        console.log(videoCheck);
+      }, 68000);
     }
   };
 

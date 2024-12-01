@@ -43,6 +43,7 @@ function App() {
   const [gifOpacity, setGifOpacity] = useState(1);
 
   const [gifComment, setGitCommemt] = useState(false);
+  const [gifLastComment, setGitLastCommemt] = useState(false);
   const [letterOpacity, setLetterOpacity] = useState(0); // 초기값을 0으로 설정
 
   const [isSecondGifClickable, setIsSecondGifClickable] = useState(false);
@@ -186,9 +187,6 @@ function App() {
         setShowText(false);
         setShowButton(false);
         setShowLastGif(true);
-        setTimeout(() => {
-          setGitCommemt(true);
-        }, 5000);
       }
     } else if (currentTextIndex === 0 && isText0Complete) {
       setCurrentTextIndex(1);
@@ -202,9 +200,6 @@ function App() {
           if (!showSecondGif) {
             // 이 조건을 추가
             setShowSecondGif(true);
-            setTimeout(() => {
-              setGitCommemt(true);
-            }, 4000);
           }
           setShowText(false);
           setShowButton(false);
@@ -224,10 +219,9 @@ function App() {
     if (!isLastGifClickable) return; // 클릭 불가 시 함수 종료
     setGifOpacity(0); // GIF의 opacity를 0으로 설정
     setShowLetter(true); // Letter를 나타나게 설정
-    setGitCommemt(false);
     setTimeout(() => {
       setShowLastGif(false); // GIF를 숨김
-      setGitCommemt(false);
+      setGitLastCommemt(false);
       setLetterOpacity(1); // 서서히 나타나게 설정
     }, 2000); // 0.5초 후에 실행
   };
@@ -273,7 +267,8 @@ function App() {
     if (showSecondGif) {
       const timer = setTimeout(() => {
         setIsSecondGifClickable(true); // GIF 재생 완료 후 클릭 가능
-      }, 2500); // GIF 재생 시간에 맞춰 조정
+        setGitCommemt(true);
+      }, 3000); // GIF 재생 시간에 맞춰 조정
 
       return () => clearTimeout(timer);
     }
@@ -283,6 +278,7 @@ function App() {
     if (showLastGif) {
       const timer = setTimeout(() => {
         setIsLastGifClickable(true); // GIF 재생 완료 후 클릭 가능
+        setGitLastCommemt(true);
       }, 4000); // GIF 재생 시간에 맞춰 조정
 
       return () => clearTimeout(timer);
@@ -310,7 +306,12 @@ function App() {
             onClick={handleSecondGifClick}
           />
           {gifComment && (
-            <p className={styles.comment} style={{ left: "51% " }}>
+            <p
+              className={styles.comment}
+              style={{
+                left: "51% ",
+              }}
+            >
               날 클릭해줘!
             </p>
           )}
@@ -330,7 +331,17 @@ function App() {
               left: "50.5%",
             }} // opacity와 transition 추가
           />
-          {gifComment && <p className={styles.comment}>날 클릭해줘</p>}
+          {gifLastComment && (
+            <p
+              className={styles.comment}
+              style={{
+                opacity: gifOpacity,
+                transition: "opacity 0.5s ease",
+              }}
+            >
+              날 클릭해줘
+            </p>
+          )}
         </div>
       )}
       {showLetter && (

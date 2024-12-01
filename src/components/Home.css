@@ -49,7 +49,7 @@
   height: 100vh;
   overflow: hidden;
   z-index: 2;
-  animation: fadeIn 60s forwards; /* 60초 동안 opacity가 0에서 1로 변하는 애니메이션 */
+  animation: fadeIn 66s forwards; /* 60초 동안 opacity가 0에서 1로 변하는 애니메이션 */
 }
 
 .player.last-background {
@@ -106,8 +106,8 @@
 .ms-item {
   display: block;
   font-size: 2rem;
-  color: #fff;
-  text-shadow: 4px 2px 4px rgba(34, 34, 34, 0.8);
+  color: #f5f5f5;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 1);
   transition: opacity 6s linear;
   white-space: pre-wrap;
   z-index: 400;
