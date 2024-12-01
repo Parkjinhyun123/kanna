@@ -13,7 +13,7 @@ import Letter1 from "../assets/편지1.png";
 import Letter2 from "../assets/편지2.png";
 import Letter3 from "../assets/편지3.png";
 import Letter4 from "../assets/편지4.png";
-import Letter5 from "../assets/편지5.png";
+import Letter5 from "../assets/편지6.png";
 import Letter6 from "../assets/편지5.png";
 import Letter7 from "../assets/칠판.jpg";
 import Modal from "./Modal";
