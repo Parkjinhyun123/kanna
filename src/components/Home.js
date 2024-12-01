@@ -8,8 +8,13 @@ import { fetchDocumentsWithMsField } from "../api/firebase";
 import { v4 as uuidv4 } from "uuid";
 
 const Home = () => {
-  const { toggleBackground, videoIdToFetch, isVideoEnded, setIsVideoEnded } =
-    useOutletContext();
+  const {
+    toggleBackground,
+    videoIdToFetch,
+    isVideoEnded,
+    setIsVideoEnded,
+    setHandleModalClose,
+  } = useOutletContext();
 
   const [lastBack, setLastBack] = useState(false);
   const [videoId, setVideoId] = useState(null);
@@ -24,25 +29,11 @@ const Home = () => {
   const [isIntervalActive, setIsIntervalActive] = useState(false);
   const [isHover, setIsHover] = useState(false);
   const [videoCheck, setVideoCheck] = useState(false);
+  const [hasCalledModalClose, setHasCalledModalClose] = useState(false);
 
   const handleReady = (event) => {
     playerRef.current = event.target;
   };
-
-  // 전체화면 변경 이벤트 리스너 추가
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      if (!document.fullscreenElement && videoIdToFetch === "kIBXQHvgs1c") {
-        handleVideoEnd();
-      }
-    };
-
-    document.addEventListener("fullscreenchange", handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange);
-    };
-  }, [videoIdToFetch]);
 
   // 이미지 배열에 넣기
   const importAll = (r) => {
@@ -113,7 +104,7 @@ const Home = () => {
         }
       })
       .catch((error) => console.error("Error:", error));
-  }, [videoIdToFetch]);
+  }, []);
 
   const itemWidth = 200;
   const itemHeight = 50;
@@ -221,8 +212,6 @@ const Home = () => {
       setTimeout(() => {
         handleItemRemoval(newItem.id); // 아이템 제거
       }, 6000);
-    } else {
-      console.error("모든 위치를 소진했습니다.");
     }
   };
 
@@ -258,96 +247,74 @@ const Home = () => {
     return fetchedDocuments; // 로드된 문서를 반환
   };
 
-  useEffect(() => {
-    if (displayedMs.length >= 6) {
-      setVideoCheck(true);
-    }
-  }, [displayedMs]);
-
   const handleVideoEnd = async () => {
-    const fetchedDocuments = await loadDocuments();
+    setIsVideoEnded(true);
+  };
 
-    if (videoIdToFetch === "3nxmYzsQCHk") {
-      setIsVideoEnded(true);
-    }
+  const handleHomeModalClose = async () => {
+    if (hasCalledModalClose) return;
+    setHasCalledModalClose(true); // 호출 상태 업데이트
+
+    const fetchedDocuments = await loadDocuments();
+    setIsIntervalActive(true);
+    setMsCon(true);
+    setLastBack(true);
 
     // 문서가 비어 있지 않은지 확인
     if (fetchedDocuments.length === 0) {
       return; // 문서가 없으면 더 이상 진행하지 않음
     }
 
-    if (!document.fullscreenElement === null) {
-      setIsVideoEnded(false);
-    }
+    audioRef.current.volume = 0.3;
+    audioRef.current.play().catch((error) => {
+      console.error("Audio play failed:", error);
+    });
 
-    // 전체화면이 아니고 비디오 ID가 맞는 경우
-    if (
-      document.fullscreenElement === null &&
-      videoIdToFetch === "kIBXQHvgs1c" &&
-      !videoCheck
-    ) {
-      // 초기 상태 리셋
-      setVideoCheck(true);
-      console.log(videoCheck);
+    const usedIndices = new Set();
 
-      setIsVideoEnded(false);
-      setIsIntervalActive(true);
-      setMsCon(true);
-      setLastBack(true);
-      setVideoId(null);
+    const interval = setInterval(() => {
+      if (displayedMs.length < 6) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * fetchedDocuments.length);
+        } while (
+          usedIndices.has(randomIndex) &&
+          usedIndices.size < fetchedDocuments.length
+        );
 
-      setTimeout(() => {
-        setVideoCheck(true);
-        console.log(videoCheck);
-        setVideoId("kIBXQHvgs1c");
-      }, 70000);
-
-      // 오디오 재생
-      audioRef.current.volume = 0.4;
-      audioRef.current.play().catch((error) => {
-        console.error("Audio play failed:", error);
-      });
-
-      const usedIndices = new Set();
-
-      // 랜덤 문서 선택 및 추가
-      const interval = setInterval(() => {
-        if (displayedMs.length < 6) {
-          let randomIndex;
-          do {
-            randomIndex = Math.floor(Math.random() * fetchedDocuments.length);
-          } while (
-            usedIndices.has(randomIndex) &&
-            usedIndices.size < fetchedDocuments.length
-          );
-
-          // 모든 문서를 사용한 경우
-          if (usedIndices.size >= fetchedDocuments.length) {
-            clearInterval(interval);
-            setIsIntervalActive(false);
-            return;
-          }
-
-          const newMs = fetchedDocuments[randomIndex].ms; // 로드된 문서 사용
-          usedIndices.add(randomIndex);
-
-          // 아이템 추가
-          addMsItem(newMs); // addMsItem 호출
-        } else {
+        if (usedIndices.size >= fetchedDocuments.length) {
           clearInterval(interval);
           setIsIntervalActive(false);
+          return;
         }
-      }, 1000); // 1000ms 간격 설정
 
-      // 시간 초과 시 인터벌 클리어
-      setTimeout(() => {
+        const newMs = fetchedDocuments[randomIndex].ms; // 로드된 문서 사용
+        usedIndices.add(randomIndex);
+
+        // 아이템 추가
+        addMsItem(newMs); // addMsItem 호출
+      } else {
         clearInterval(interval);
         setIsIntervalActive(false);
-        setVideoCheck(true);
-        console.log(videoCheck);
-      }, 68000);
-    }
+      }
+    }, 1000); // 1000ms 간격 설정
+
+    // 시간 초과 시 인터벌 클리어
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsIntervalActive(false);
+      setVideoCheck(true);
+      console.log(videoCheck);
+    }, 68000);
   };
+
+  if (videoIdToFetch === null) {
+    handleHomeModalClose();
+  }
+
+  useEffect(() => {
+    setHandleModalClose(() => handleHomeModalClose);
+  }, []); // 빈 배열로 설정하여 최초 렌더링 시 한 번만 실행
 
   // 유튜브 API 자동재생 막기
   const opts = {

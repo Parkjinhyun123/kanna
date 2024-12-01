@@ -9,6 +9,15 @@ import Uroko2 from "../assets/케이크.gif";
 import Uroko3 from "../assets/마지막.gif";
 import Letter from "../assets/편지1.jpg";
 
+import Letter1 from "../assets/편지1.png";
+import Letter2 from "../assets/편지2.png";
+import Letter3 from "../assets/편지3.png";
+import Letter4 from "../assets/편지4.png";
+import Letter5 from "../assets/편지5.png";
+import Letter6 from "../assets/편지5.png";
+import Letter7 from "../assets/칠판.jpg";
+import Modal from "./Modal";
+
 const audioFiles = ["/Sound/반갑꼬리.mp3"];
 
 function App() {
@@ -32,7 +41,6 @@ function App() {
   const [secondTextIndex, setSecondTextIndex] = useState(0);
   const [isSecondTextComplete, setIsSecondTextComplete] = useState(false);
 
-  const [videoIdToFetch, setVideoIdToFetch] = useState("3nxmYzsQCHk"); //다이어리 아이디
   const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
   const [isCircleActive, setIsCircleActive] = useState(false);
@@ -48,6 +56,11 @@ function App() {
 
   const [isSecondGifClickable, setIsSecondGifClickable] = useState(false);
   const [isLastGifClickable, setIsLastGifClickable] = useState(false);
+  const [videoIdToFetch, setVideoIdToFetch] = useState("3nxmYzsQCHk"); //다이어리 아이디
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [handleModalClose, setHandleModalClose] = useState(null);
+  const [currentImages, setCurrentImages] = useState([]);
 
   const texts = [
     "안녕! \n 우리의 첫 번째 오시!",
@@ -226,11 +239,35 @@ function App() {
     }, 2000); // 0.5초 후에 실행
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // 모달 닫기
+    setShowOutlet(true); // Outlet을 보여줌
+    setVideoIdToFetch(null);
+  };
+
+  useEffect(() => {
+    if (showOutlet && handleModalClose) {
+      handleModalClose(); // Home.js의 핸들러 호출
+    }
+  }, [showOutlet, handleModalClose]); // showOutlet이 true로 변경될 때 호출
+
   const handleLetterClick = () => {
+    const letterImages = [
+      Letter1,
+      Letter2,
+      Letter3,
+      Letter4,
+      Letter5,
+      Letter6,
+      Letter7,
+    ];
+
     setShowLetter(false);
-    setVideoIdToFetch("kIBXQHvgs1c");
-    setShowOutlet(true);
-    setIsVideoEnded(false);
+
+    setCurrentImages(letterImages);
+    setTimeout(() => {
+      setIsModalOpen(true);
+    }, 2000);
     setIsCircleActive(true);
     setBgColor("rgba(0, 0, 255, 0.5)");
   };
@@ -357,6 +394,11 @@ function App() {
           }}
         />
       )}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        images={currentImages}
+      />
       {showText && (
         <div className={styles.textMsCotainer}>
           {showText && (
@@ -387,9 +429,14 @@ function App() {
           <Outlet
             context={{
               toggleBackground,
-              videoIdToFetch,
               isVideoEnded,
+              videoIdToFetch,
               setIsVideoEnded,
+              setHandleModalClose: (callback) => {
+                setHandleModalClose(() => {
+                  return callback; // 콜백 함수 반환
+                });
+              },
             }}
           />
         )}

@@ -1,0 +1,94 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 7000;
+}
+
+.modalContent {
+  padding: 20px;
+  border-radius: 8px;
+  position: fixed; /* fixed로 변경 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  width: 80vw;
+  max-height: 90%;
+  overflow: auto; /* 이미지가 많을 경우 스크롤 가능 */
+}
+
+.closeButton {
+  position: fixed;
+  top: 2rem;
+  right: 15rem;
+  cursor: pointer;
+  width: 3rem;
+}
+
+.imageContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.modalImage {
+  width: 30vw; /* 원하는 크기로 조정 */
+  height: 80vh;
+  margin: 5px;
+  border-radius: 16px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.7);
+  user-select: none;
+}
+
+.lastImage {
+  width: 50vw;
+  height: 50vh;
+}
+
+.navButton {
+  position: absolute; /* 절대 위치로 설정 */
+  top: 50%; /* 세로 중앙 정렬 */
+  transform: translateY(-50%); /* 세로 중앙 정렬을 위해 변환 */
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
+.navButton:first-of-type {
+  left: 20rem; /* 왼쪽 버튼을 이미지 왼쪽에 위치 */
+}
+
+.navButton:last-of-type {
+  right: 20rem; /* 오른쪽 버튼을 이미지 오른쪽에 위치 */
+}
+
+/* 비활성화 시 버튼 숨김 스타일 */
+.hidden {
+  visibility: hidden; /* 버튼을 보이지 않게 하지만 공간은 차지함 */
+  pointer-events: none; /* 클릭 이벤트 방지 */
+}
+
+@media (min-width: 1920px) {
+  .navButton:first-of-type {
+    left: 10rem; /* 왼쪽 버튼을 이미지 왼쪽에 위치 */
+  }
+
+  .navButton:last-of-type {
+    right: 10rem; /* 오른쪽 버튼을 이미지 오른쪽에 위치 */
+  }
+}
+
+@media (min-width: 2560px) {
+  .navButton:first-of-type {
+    left: 20rem; /* 왼쪽 버튼을 이미지 왼쪽에 위치 */
+  }
+
+  .navButton:last-of-type {
+    right: 20rem; /* 오른쪽 버튼을 이미지 오른쪽에 위치 */
+  }
+}
