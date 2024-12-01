@@ -32,7 +32,7 @@ function App() {
   const [secondTextIndex, setSecondTextIndex] = useState(0);
   const [isSecondTextComplete, setIsSecondTextComplete] = useState(false);
 
-  const [videoIdToFetch, setVideoIdToFetch] = useState("VBmHnTzX1Xo"); //다이어리 아이디
+  const [videoIdToFetch, setVideoIdToFetch] = useState("3nxmYzsQCHk"); //다이어리 아이디
   const [isTyping, setIsTyping] = useState(false); // 추가된 상태
 
   const [isCircleActive, setIsCircleActive] = useState(false);

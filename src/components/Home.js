@@ -267,7 +267,7 @@ const Home = () => {
   const handleVideoEnd = async () => {
     const fetchedDocuments = await loadDocuments();
 
-    if (videoIdToFetch === "VBmHnTzX1Xo") {
+    if (videoIdToFetch === "3nxmYzsQCHk") {
       setIsVideoEnded(true);
     }
 
