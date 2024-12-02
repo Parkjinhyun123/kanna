@@ -334,7 +334,13 @@ const Home = () => {
   return (
     <div className="Youtube-container">
       {lastBack && images.length > 0 && (
-        <img src={images[currentImageIndex]} alt="배경" className="last" />
+        <img
+          src={images[currentImageIndex]}
+          alt="배경"
+          className={
+            currentImageIndex === images.length - 1 ? "last last-image" : "last"
+          }
+        />
       )}
       {videoId && (
         <>

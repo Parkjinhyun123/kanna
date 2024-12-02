@@ -10,8 +10,12 @@ const Modal = ({ isOpen, onClose, images }) => {
   const [volume, setVolume] = useState(0.4); // 초기 볼륨 상태
   const audioRef = useRef(new Audio("/Sound/사랑의 노래.mp3")); // 오디오 객체 생성
   const [isPlaying, setIsPlaying] = useState(false); // 재생 상태 관리
+  const [modalOpaciy, setModalOpacity] = useState(0);
 
   useEffect(() => {
+    setTimeout(() => {
+      setModalOpacity(1);
+    }, 2000);
     if (isOpen) {
       audioRef.current.volume = volume; // 초기 볼륨 설정
 
@@ -49,7 +53,6 @@ const Modal = ({ isOpen, onClose, images }) => {
   if (!isOpen) return null;
 
   const handleClose = () => {
-    console.log("Modal.js 모달이 닫힙니다."); // 로그 추가
     onClose(); // 모달 닫힐 때 onClose 호출
   };
 
@@ -62,7 +65,10 @@ const Modal = ({ isOpen, onClose, images }) => {
   };
 
   return (
-    <div className={styles.modalOverlay}>
+    <div
+      className={styles.modalOverlay}
+      style={{ opacity: modalOpaciy, transition: "opacity 0.5s ease" }}
+    >
       <div className={styles.modalContent}>
         {currentIndex === images.length - 1 && (
           <img
