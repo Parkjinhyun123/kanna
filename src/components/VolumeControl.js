@@ -3,7 +3,7 @@ import styled from "styled-components";
 const VolumeControl = styled.div`
   display: flex;
   position: absolute;
-  right: 3rem;
+  left: 3rem;
   bottom: 5rem;
   transform: rotate(-90deg);
   justify-content: center;
