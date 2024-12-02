@@ -241,6 +241,7 @@ function App() {
   const handleCloseModal = () => {
     setIsModalOpen(false); // 모달 닫기
     setShowOutlet(true); // Outlet을 보여줌
+    setIsCircleActive(false);
     setVideoIdToFetch(null);
   };
 
