@@ -50,12 +50,10 @@
   overflow: hidden;
   z-index: 2;
   animation: fadeIn 66s forwards; /* 60초 동안 opacity가 0에서 1로 변하는 애니메이션 */
-  filter: grayscale(20%);
 }
 
 .last-image {
   opacity: 1;
-  filter: grayscale(0);
 }
 
 .player.last-background {
