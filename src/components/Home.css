@@ -54,6 +54,7 @@
 
 .last-image {
   opacity: 1;
+  z-index: 2;
 }
 
 .player.last-background {
